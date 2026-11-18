@@ -28,6 +28,9 @@ Course: *Advanced Robotics* (R7021E), Luleå University of Technology, 2026 · G
 |---|---|
 | ![Lab 2](lab2/plots/task2-recorded-vs-simulation.png) | ![Project](project/plots/s4_pair.png) |
 
+📄 **Final project report:** [MPC for a robot that carries a plank, with a moving obstacle and a moving goal](project/resubmission/report/2026-10-29-project-report-group6-resubmission.pdf) (PDF, 15 pages).
+Lab reports: [Lab 2](lab2/submission/Lab_2_report_group6.pdf) · [Lab 3](lab3/Lab_3_report_group6.pdf) · [Lab 4](lab4/Lab_4_report_group6.pdf)
+
 ## Run it
 
 Each lab is a separate colcon workspace (ROS 2 Jazzy):
