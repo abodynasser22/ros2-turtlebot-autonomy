@@ -1,0 +1,58 @@
+<!-- Hand-written interpretation, pasted into the study guide by build_study_guide.py. -->
+
+<!--S1_TEXT-->
+<div class="box result">Both footprints complete both paths without touching the obstacle (all with the 2 cm margin). The difference is how far they have to leave the path to go round it:
+<b>circle</b>: max path error 0.207 m with one disc against 0.075 m with three, 2.8× less (Theory Guide §11 predicted 0.21 against 0.07 before the margin).
+<b>figure-8</b>: 0.302 m against 0.027 m, 11× less. Next to the crossing, the one-disc model (0.389 m keep-out) has to swing wide on both passes, while three discs barely notice the obstacle.</div>
+<p>The price is clearance. The three-disc plank passes the s1a obstacle with 11 mm of real clearance, against 89 mm for one disc. Three discs spend the room that one disc wasted, and that room was also what absorbed odometry error. Without the margin, the 11 mm became −2 mm (below).</p>
+<!--/S1_TEXT-->
+
+<!--RESULTS_TEXT-->
+<h3>What the scenario 2 table says</h3>
+<p>All runs above use the 2 cm safety margin (LOG D9). Predictions from Theory Guide §12 with the margin added: one disc needs 0.579 m, three discs need 0.300 m.</p>
+<ul>
+<li><b>One disc rejects every gap of 0.50 m or less.</b> At 0.50 m the real plank has 0.15 m to spare on each side, and the controller still refuses, because its model of the body does not fit. That's the cost of a conservative footprint, and the headline of research question 1.</li>
+<li><b>Three discs pass every gap down to 0.30 m</b>, the gap the proposal named, with real clearance (gap − 0.20)/2. At 0.28 m they stop, which is the margin's price. Without the margin (<code>bags/margin0/</code>) three discs passed 0.28 m too, but the same footprint grazed the obstacle in s1a.</li>
+<li>A rejected run is <b>safe</b>, not a crash. The robot stops where its keep-out rings touch the posts and never touches anything.</li>
+</ul>
+{{img|plots/margin0/s1a_pair.png|Without the margin: s1a, red one disc, blue three discs. The blue run grazed the obstacle at the top (−2.1 mm), slipped, and its odometry drifted 1.03 m from the truth, which is why the blue truth path wanders off the circle.}}
+
+<h3>Gate 1 (your bags)</h3>
+<div class="tablewrap"><table>
+<tr><th>bag</th><th>result</th></tr>
+<tr><td>gate1_t4</td><td class="pass">PASS: about two laps (10.13 m), closest 0.2195 m to a 0.225 keep-out (5.5 mm soft slack), mean circle error 4.4 mm</td></tr>
+<tr><td>gate1_t3</td><td class="fail">no motion: goal never received (§14)</td></tr>
+<tr><td>gate1_t3-version2</td><td class="fail">no motion: same</td></tr>
+<tr><td>reproduction (Claude)</td><td class="pass">goal published after the node started: reached (1.78, 0.01)</td></tr>
+</table></div>
+
+<h3>The horizon sweep (desk, Gazebo window closed)</h3>
+<div class="tablewrap"><table>
+<tr><th>case</th><th>N = 20 (0.44 m)</th><th>N = 40 (0.88 m)</th><th>N = 60 (1.32 m)</th></tr>
+<tr><td>s2_030, three discs: median / p95 ms</td><td><b>33 / 59</b></td><td>67 / 174</td><td>105 / 367</td></tr>
+<tr><td>s1a, three discs</td><td><b>23 / 39</b></td><td>51 / 82</td><td>85 / 131</td></tr>
+<tr><td>s2_030, one disc</td><td><b>20 / 30</b></td><td>44 / 59</td><td>64 / 87</td></tr>
+</table></div>
+<p>Q6's rule was "the largest N whose p95 stays under 50 ms". Strictly, only one disc meets it at N = 20, and the hardest three-disc case reaches 59 ms. N = 40 is far over. So N = 20 is the only horizon that stays inside the 100 ms tick everywhere. Its reach of 0.44 m covers every detour in scenarios 1 and 2 (the largest is about 0.2 m). With the Gazebo window open, the same N = 20 solves took 110–120 ms median. <b>Never quote a solve time without saying whether the GUI was running.</b></p>
+<!--/RESULTS_TEXT-->
+
+<!--S3_TEXT-->
+<div class="box result">The pair differs in one node parameter and nothing else. <b>With its future the plank passed in all three runs</b> with 4.8 to 5.6 cm of real clearance, and reached the goal in 11.4 to 11.5 s. <b>With only the position now it touched the obstacle in all three runs</b>, by 6 to 8 mm, and none reached the goal: they stopped 0.99, 1.04 and 1.59 m short.</div>
+<ul>
+<li><b>What the robot did with its future.</b> In all three runs: straight until 1.8 s, then a turn and a stop at x = 0.70 to 0.71 m at about 3.4 s, turning in place to a heading of -90 degrees at 4.7 s (it is at -61 degrees when the obstacle crosses at 3.98 s, with 0.08 to 0.09 m of clearance), and on again at about 5 s. The goal took 11.4 to 11.5 s, against 8.9 s for the same drive past the open corridor of scenario 2, so the manoeuvre cost about 2.5 s. Odometry's heading stayed within 0.5 degrees of the truth.</li>
+<li><b>What happened without it.</b> Straight until 3.2 s, first reaction with the obstacle 0.24 m from the line, contact at 3.5 s. After the contact the true heading kept turning clockwise (300 to 550 degrees over the run) while odometry's did not, so the controller steered from a pose that was wrong by about a metre (the column above). We do not know why the true heading kept turning, and we did not test whether the wheels slipped. The symptom is the same as in the zero-margin graze of scenario 1.</li>
+<li><b>The desk predicted it.</b> +0.044 m and −0.041 m at the desk, +0.049 m and −0.008 m in the first Gazebo pair. The desk has no physics, so nothing stops the plank passing through the obstacle there, but the sign and the verdict are the same.</li>
+<li><b>Solve time.</b> Longest while the avoidance was planned. Between 3 and 6 s the median was 53 to 54 ms with its future and 60 to 72 ms without, against about 30 ms in the rest of the run. The 95th percentile over a run was 60 to 66 ms with its future and 88 to 94 ms without. Single ticks reached 116 ms with its future and 127 to 248 ms without, above the 100 ms tick.</li>
+</ul>
+<!--/S3_TEXT-->
+
+<!--S4_TEXT-->
+<div class="box result">The fit got within 0.2 m of the ball in <b>3 of 3 runs</b> (after 8.9, 13.9 and 12.9 s). The hold <b>never</b> did. The mean distance over the last 5 s was 0.14 to 0.21 m with the fit and 0.30 to 0.34 m with the hold: about 43 percent smaller on average.</div>
+<ul>
+<li><b>The noise seed matters, the ordering does not.</b> The three runs use noise seeds 1, 2 and 3, the same for both modes. The fit varies from 0.14 to 0.21 m because a different noise sample gives a different fitted line. The hold is steadier, since it does not fit anything. The fit was better for every seed.</li>
+<li><b>How the two differ.</b> Both robots ran at the speed limit (0.22 m/s) for 99 percent of the time and reached the turn-rate limit, and the ball moves at 0.206 m/s, so the robot is only 7 percent faster. By 8 s both had lined up with the ball's path (sideways offset 0.08 to 0.11 m). What differs is how far behind the ball they are along its path: the fit 0.19 to 0.26 m at 8 s and 0.10 to 0.18 m at 15 s, the hold 0.36 to 0.40 m and 0.27 to 0.31 m. After 8 s both close the gap by only about 0.01 m/s. The gain from the fit is a smaller lag, not a different path.</li>
+<li><b>Desk against Gazebo.</b> The desk predicted 0.142 m for the fit and 0.313 m for the hold. Gazebo gave an average of 0.183 m and 0.323 m. The desk robot has no acceleration limit and no odometry error, which may explain the difference, and we did not isolate it. Odometry was up to 8 cm off in the fit runs and up to 4.6 cm in the hold runs.</li>
+<li><b>Solve time.</b> About 26 to 31 ms (95th percentile), well inside the tick.</li>
+<li><b>What this does not show.</b> The ball moves in a straight line at a constant speed, so the constant velocity model is exact for it. A ball that turned would show where the fit fails.</li>
+</ul>
+<!--/S4_TEXT-->

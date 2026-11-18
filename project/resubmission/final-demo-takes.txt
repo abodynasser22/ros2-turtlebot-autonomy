@@ -1,0 +1,10 @@
+s3_future        three  | reached  11.5 s              | min clearance +0.0526 m | solve med  39.8 p95  62.1 ms | PASS
+s3_future take 1: kept
+s3_now           three  | stopped, 0.92 m short        | min clearance -0.0069 m | solve med  35.3 p95  95.3 ms | FAIL
+s3_now take 1: kept
+s4_fit           three  | goal mean 0.159 m, within 0.2 m at 10.0 s | no obstacle | solve med  25.5 p95  28.3 ms | 
+s4_fit take 1: kept
+s4_hold          three  | goal mean 0.738 m, within 0.2 m at never | no obstacle | solve med  31.1 p95  82.8 ms | 
+bag | scenario | first_within_0p2 | mean_last5 | window_end | turn_total | turn_place | path | min_heading_deg | max_heading_deg | odom_err | solve_med | solve_p95 | solve_max | solve_over_tick | ticks | iter_med | iter_max | failed | late_ticks | late_max_ms | max_slack | verdict
+s4_hold | s4 | - | 0.3222 | 15.50 | 2.91 | 0.0000 | 3.34 | -41.03 | 78.07 | 0.0173 | 28.06 | 34.02 | 36.61 | 0 | 156 | 13.00 | 17 | 0 | 1 | 100.00 | -0.0000 | PASS
+s4_hold take 1: kept (node did not stop on time; graded over the 15.5 s window)

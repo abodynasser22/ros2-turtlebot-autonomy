@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Study Guide</title>
+{{STYLE}}
+<style>
+.codehead{font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink-soft);margin:18px 0 -8px}
+pre.code{max-height:none}
+.result{background:var(--teal-soft);border-color:transparent}
+.result::before{content:"Measured  ";font-weight:700;color:var(--teal);font-size:13px;letter-spacing:.06em}
+.fiddle{background:var(--violet-soft);border-color:transparent}
+.fiddle::before{content:"Fiddle with it  ";font-weight:700;color:var(--violet);font-size:13px;letter-spacing:.06em}
+.bug{background:var(--red-soft);border-color:transparent}
+.bug::before{content:"Silent failure  ";font-weight:700;color:var(--red);font-size:13px;letter-spacing:.06em}
+figure img{width:100%;height:auto;display:block;border-radius:8px;background:#fff}
+td.pass{color:var(--green);font-weight:700} td.fail{color:var(--red);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="cover">
+  <div class="kick">R7021E final project · after the code · scenarios 1 to 4</div>
+  <h1>Carrying a plank with MPC: the study guide</h1>
+  <p>The whole controller, line by line, the Gazebo world around it, how every number in the results was measured, and the bugs found on the way. Read the Theory Guide first: this one assumes its pictures and equations and points back to them by section number.</p>
+</header>
+
+<nav class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#story">What happened, in order</a></li>
+    <li><a href="#map">Where everything lives</a></li>
+    <li><a href="#run">Running it: four terminals</a></li>
+    <li><a href="#body">The node, part 1: the body</a></li>
+    <li><a href="#scen">The node, part 2: scenarios</a></li>
+    <li><a href="#mpc">The node, part 3: the MPC</a></li>
+    <li><a href="#loop">The node, part 4: the control loop</a></li>
+    <li><a href="#pub">The node, part 5: what it draws</a></li>
+    <li><a href="#main">The node, part 6: starting and stopping</a></li>
+    <li><a href="#world">The plank in Gazebo</a></li>
+    <li><a href="#launch">The launch file</a></li>
+    <li><a href="#eval">The evaluation harness</a></li>
+    <li><a href="#move">The node, part 7: things that move</a></li>
+    <li><a href="#movingworld">Things that move: Gazebo, launch and grading</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#bugs">Silent failures we hit</a></li>
+    <li><a href="#fiddle">Things to try yourself</a></li>
+    <li><a href="#oral">Oral questions, with answers</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="story"><span class="n">1</span>What happened, in order</h2>
+<div class="tablewrap"><table>
+<tr><th>Step</th><th>What</th><th>Outcome</th></tr>
+<tr><td>Gate 0</td><td>Lab 2's node copied verbatim. Desk sim of task 4.</td><td>Identical to Lab 2: 0.2249 m closest, 2.6 mm mean error.</td></tr>
+<tr><td>Gate 1</td><td><b>You</b> ran tasks 4 and 3 in Gazebo with the copy.</td><td>Task 4 passed. Task 3 never moved: the goal didn't reach the node (§16).</td></tr>
+<tr><td>Node</td><td>Footprints, soft box, SCENARIOS, markers, solve time, stop fix.</td><td>Smoke test solves for burger, one and three.</td></tr>
+<tr><td>Horizon</td><td>Desk sweep N = 20, 40, 60.</td><td>N = 20 stays. The Gazebo GUI triples solve time (§15).</td></tr>
+<tr><td>Gate 2</td><td>Plank model, launch file, ground truth.</td><td>Robot, posts and walls spawn. <code>/ground_truth</code> publishes.</td></tr>
+<tr><td>Scenarios 1, 2</td><td>16 headless Gazebo runs: s1a, s1b, s2 × 6 gaps, each with one and three discs.</td><td>§15.</td></tr>
+<tr><td>Check</td><td>Laptop bags downloaded from the Drive and regraded on the desktop.</td><td>All 16 match the log. The zero-margin graze reproduces (−2.1 mm).</td></tr>
+<tr><td>Scenario 3</td><td>A cylinder crosses the robot's path. Obstacle centre as a TVP, with its future or only its position now.</td><td>Desk first, then Gazebo. §13, §14, §15.</td></tr>
+<tr><td>Scenario 4</td><td>A ball is the goal. Noisy observations, constant-velocity least-squares fit against holding the last position.</td><td>First geometry showed nothing, second works. §13, §15.</td></tr>
+<tr><td>Repeats</td><td>Three runs of every mode of scenarios 3 and 4, headless, by <code>run_headless.py</code>.</td><td>§15.</td></tr>
+</table></div>
+<p>Every decision taken while you were away is listed in <code>project/LOG.md</code> under "Decisions made without Dominic" (D1 to D10) and in the 2026-10-21 entries (F1 to F5). Read those tables: each row is something you can be asked "why?" about.</p>
+
+<!-- ============================================================ -->
+<h2 id="map"><span class="n">2</span>Where everything lives</h2>
+<div class="tablewrap"><table>
+<tr><th>File</th><th>Role</th><th>Reads SCENARIOS?</th></tr>
+<tr><td><code>ros2_ws/src/r7021e_project/r7021e_project/mpc_node.py</code></td><td>The controller. The only file that is "the project".</td><td>owns it</td></tr>
+<tr><td><code>ros2_ws/src/r7021e_project/launch/project_sim.launch.py</code></td><td>Gazebo + robot + obstacles + bridges: the sim's bringup.</td><td>imports it</td></tr>
+<tr><td><code>ros2_ws/src/r7021e_project/worlds/burger_plank.sdf</code></td><td>Course Burger + plank + ground-truth plugin.</td><td></td></tr>
+<tr><td><code>ros2_ws/src/r7021e_project/rviz/project.rviz</code></td><td>What RViz shows.</td><td></td></tr>
+<tr><td><code>analysis/plot_run.py</code></td><td>Grades bags from ground truth. The purple box in the block diagram.</td><td>imports it</td></tr>
+<tr><td><code>analysis/run_headless.py</code></td><td>One headless run in Gazebo into a bag, on its own domain. The four terminals as one command.</td><td></td></tr>
+<tr><td><code>analysis/replay_video.py</code>, <code>rviz/replay.rviz</code></td><td>Replays a bag in RViz and screen-records it, for the demo video.</td><td></td></tr>
+<tr><td><code>desk/sim_scenario.py</code></td><td>Closed-loop sim without ROS. Local only, gitignored.</td><td>imports it</td></tr>
+<tr><td><code>bags/</code>, <code>plots/</code></td><td>Recorded runs and the figures made from them.</td><td></td></tr>
+<tr><td><code>LOG.md</code>, <code>RUNSHEET.md</code>, <code>report_notes.md</code>, <code>DEMO_PLAN.md</code></td><td>What was done and why, the commands that work, the report source, the demo plan.</td><td></td></tr>
+</table></div>
+<div class="box key">Four programs read one table. That's the Lab 2 plot-tool lesson (two copies of the constants drift) applied everywhere: the obstacles Gazebo spawns, the obstacles the MPC avoids, and the obstacles the analysis grades against are the same numbers.</div>
+
+<!-- ============================================================ -->
+<h2 id="run"><span class="n">3</span>Running it: four terminals</h2>
+<div class="tablewrap"><table>
+<tr><th>Terminal</th><th>Command</th><th>On the real robot this would be</th></tr>
+<tr><td>T1</td><td><code>ros2 launch r7021e_project project_sim.launch.py scenario:=s2_030</code></td><td><code>turtlebot3_bringup</code> on the Pi</td></tr>
+<tr><td>T2</td><td><code>ros2 run r7021e_project mpc_node --ros-args -p scenario:=s2_030 -p footprint:=three -p use_sim_time:=true</code></td><td>the same command, without sim time</td></tr>
+<tr><td>T3</td><td><code>rviz2 -d …/project.rviz --ros-args -p use_sim_time:=true</code></td><td>RViz on the laptop</td></tr>
+<tr><td>T4</td><td><code>ros2 bag record -o … /odom /ground_truth /cmd_vel /mpc_prediction /mpc_solve_time /mpc_footprint /mpc_obstacles /mpc_ghosts /mover_1/pose /target/pose /tf /tf_static</code></td><td>the same, minus the Gazebo ground truth</td></tr>
+</table></div>
+<p>Full commands are in <code>RUNSHEET.md</code>. The scenario name is typed in T1 and T2: same name, same numbers. Scenarios 3 and 4 add one node parameter each: <code>-p prediction:=future</code> or <code>now</code>, and <code>-p goal_estimate:=fit</code> or <code>hold</code>. That parameter is the only difference between the two runs of a pair.</p>
+
+<!-- ============================================================ -->
+<h2 id="body"><span class="n">4</span>The node, part 1: the body</h2>
+<p>Theory Guide §5 derived r<sub>n</sub> = √((L/2n)² + (W/2)²). Here it is as code. Nothing is hand-typed: the radii come from the formula, so changing the plank size changes every disc correctly.</p>
+{{code|mpc_node.py|# -------------------------------------------------------------- the body|# -------------------------------------------------------------- the scenarios}}
+<div class="box eli5"><code>disc_chain(3)</code> cuts the plank into three slices, 0.167 m long each, and puts a coin on each slice big enough to cover its corners. <code>offsets</code> says where the coins sit along the robot's nose-to-tail line. <code>radius</code> says how big they are.</div>
+<div class="tablewrap"><table>
+<tr><th>footprint</th><th>offsets (m)</th><th>radius (m)</th><th>sweep (m)</th><th>use</th></tr>
+<tr><td><code>burger</code></td><td>0</td><td>0.105</td><td>0.105</td><td>Lab 2 gates, no plank</td></tr>
+<tr><td><code>one</code></td><td>0</td><td>0.269</td><td>0.269</td><td>baseline: the plank as one disc</td></tr>
+<tr><td><code>three</code></td><td>−0.167, 0, +0.167</td><td>0.130</td><td>0.269</td><td>the project's footprint</td></tr>
+</table></div>
+<p><b>SAFETY_MARGIN = 0.02 m</b> is added to every keep-out (it's also a parameter, <code>safety_margin</code>). It wasn't in the first version. It was added after the first s1a run, where the three-disc plank grazed the obstacle by 2 mm because odometry was 2.8 cm off the truth (§15, §16). With it, the gap each footprint needs becomes 2(r + 0.02): <b>0.579 m</b> for one disc and <b>0.300 m</b> for three.</p>
+<p><b>sweep</b> is the same for <code>one</code> and <code>three</code> because it describes the <em>real</em> plank, and it is only used to shrink the box. So the box treats both footprints identically and can't confound the comparison.</p>
+<p><code>rectangle_clearance</code> is Theory Guide §15's clamp formula. The controller never calls it. It sits here so the plank's size is written down in exactly one place, and the desk sim and analysis both import it.</p>
+
+<!-- ============================================================ -->
+<h2 id="scen"><span class="n">5</span>The node, part 2: scenarios</h2>
+{{code|mpc_node.py|# -------------------------------------------------------------- the scenarios|# -------------------------------------------------------------- the MPC}}
+<ul>
+<li>The <code>for _gap in GAPS</code> loop writes the six scenario-2 entries, so the post and wall geometry is one formula: post centre at gap/2 + r<sub>post</sub>, walls at gap/2 + 2r<sub>post</sub>, so the posts touch the walls (Q10).</li>
+<li><code>goal</code> is a tuple for scenario 2. The goal lives in the table, so there is no <code>ros2 topic pub</code> to time wrongly (§16, gate 1 t3).</li>
+<li><code>path_point</code> is Lab 2's <code>circle_point</code> extended with a lemniscate of Gerono: x = a sin φ, y = a sin φ cos φ. It crosses itself at the origin, and that crossing is where s1b's obstacle sits.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="mpc"><span class="n">6</span>The node, part 3: the MPC</h2>
+<p><code>build_TBmodel</code> is Lab 2's unicycle (Theory Guide §3), with one addition: for scenario 3 it declares two more TVPs per moving obstacle, <code>ox1, oy1, …</code>. <code>build_TBmpc</code> is where the project lives:</p>
+{{code|mpc_node.py|def build_TBmodel|def build_TBmpc}}
+{{code|mpc_node.py|def build_TBmpc|def smoke_test}}
+<h3>Line by line, the parts that are new</h3>
+<div class="tablewrap"><table>
+<tr><th>Code</th><th>What it means</th></tr>
+<tr><td><code>th = model.x['th']</code></td><td>The heading symbol. Lab 2 never needed it in a constraint, because a centred disc doesn't care which way you face. Off-centre discs do.</td></tr>
+<tr><td><code>soft = dict(ub=0.0, soft_constraint=True, penalty_term_cons=penalty)</code></td><td>One definition of "soft, ≤ 0, price 10 000", used by all box and obstacle constraints. do-mpc adds a slack ε ≥ 0 to each and +ρ·ε to the cost (Theory Guide §8).</td></tr>
+<tr><td><code>x - (x_max - sweep)</code></td><td>"x must be at most x_max − sweep". Written as expression ≤ 0, which is the form <code>set_nl_cons</code> wants.</td></tr>
+<tr><td><code>keep_out = r_obs + disc_radius + margin</code></td><td>Obstacle radius, plus the disc radius (inflation, Theory Guide §5), plus the safety margin for odometry error.</td></tr>
+<tr><td><code>cx = x + d * ca.cos(th)</code></td><td>Disc centre in the world, Theory Guide §6. <code>ca.cos</code>, not <code>math.cos</code>, because <code>th</code> is a symbol.</td></tr>
+<tr><td><code>'obs%d_disc%d' % (j, i)</code></td><td>Every constraint needs a unique name. Two posts × three discs gives obs1_disc1 … obs2_disc3.</td></tr>
+<tr><td><code>ox = model.tvp['ox%d' % j]</code></td><td>Scenario 3: the moving obstacle's centre is a TVP, not a number. The expression is the same keep-out, with <code>ox</code> and <code>oy</code> where the fixed obstacles have constants. do-mpc evaluates it at horizon step k with the TVP value written for step k.</td></tr>
+<tr><td><code>mover_radii</code></td><td>The node passes <code>r + mover_margin</code>, so a moving obstacle gets 0.03 m more keep-out than a still one (§13).</td></tr>
+</table></div>
+<div class="box key">The whole one-vs-three comparison is the inner <code>for i, d in enumerate(offsets)</code>. With <code>footprint:=one</code> that loop runs once with d = 0 and r = 0.269, which is Lab 2's constraint with a bigger radius. With <code>three</code> it runs three times with r = 0.130. Same solver, same costs, same box: one variable changed.</div>
+<p>Also changed: <code>'ipopt.print_level': 0</code> (Lab 2 had 1), only to keep the terminal readable.</p>
+
+<!-- ============================================================ -->
+<h2 id="loop"><span class="n">7</span>The node, part 4: the control loop</h2>
+<p>Rule 1 from the node-writing rules: callbacks store, the timer computes.</p>
+{{code|mpc_node.py|    def on_odom|    def push_out}}
+<p>Quaternion to yaw is the same four lines as every lab. <code>on_goal</code> refuses goals in scenarios that carry their own, so a stray publish can't hijack a run.</p>
+{{code|mpc_node.py|    def horizon_points|    # ------------------------------------------------------------ publishing}}
+<div class="tablewrap"><table>
+<tr><th>Step in <code>control_tick</code></th><th>Why it is there</th><th>Came from</th></tr>
+<tr><td>stale odometry → stop</td><td>Never steer on a pose older than 0.5 s.</td><td>Lab 2</td></tr>
+<tr><td>write N+1 reference points into the TVP</td><td>The sticky notes (Theory Guide §4).</td><td>Lab 2 task 4</td></tr>
+<tr><td>propagate pose by <code>delay_steps</code></td><td>Solve from where the robot will be when the command lands.</td><td>Lab 2 report, actuation delay</td></tr>
+<tr><td><code>set_initial_guess()</code> only when cold</td><td>Warm start: the last solution seeds the next.</td><td>notebook</td></tr>
+<tr><td><code>perf_counter()</code> around <code>make_step</code>, published</td><td>Solve time per tick, one of the proposal's four metrics.</td><td><b>new</b></td></tr>
+<tr><td>on failure: hold the last command ≤ 3 ticks</td><td>Coast through transient failures instead of stop-go jerking.</td><td>Lab 2 jagged-circle finding</td></tr>
+<tr><td>clip v, ω</td><td>Belt and braces: the solver's bounds are soft against numerics.</td><td>Lab 1/2</td></tr>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="pub"><span class="n">8</span>The node, part 5: what it draws</h2>
+{{code|mpc_node.py|    def marker|    def publish_prediction}}
+<p><code>marker()</code> fills in the four fields that fail silently (Lab 2 report): a unique <code>id</code>, <code>orientation.w = 1</code>, alpha above 0, and scale as a <b>diameter</b>. <code>publish_footprint</code> draws the plank as an orange box and the discs as blue flat cylinders at the measured pose. RViz then shows what the controller <em>believes</em> the body is, which is what was missing at gate 1. The plank yaw uses the z-axis quaternion (z = sin(θ/2), w = cos(θ/2)), the inverse of the yaw formula in <code>on_odom</code>.</p>
+
+<!-- ============================================================ -->
+<h2 id="main"><span class="n">9</span>The node, part 6: starting and stopping</h2>
+{{code|mpc_node.py|    def stop|if __name__}}
+<div class="box bug">Lab 2's <code>main()</code> called plain <code>rclpy.init()</code>. In Jazzy, Ctrl-C then makes rclpy's own signal handler shut the context down <em>first</em>, and the <code>finally: node.stop()</code> publish fails with "publisher's context is invalid". The robot is never told to stop. On a real TurtleBot it keeps its last command until the motor watchdog, if there is one. Found in the first headless run, where the node log ended in that exact traceback. <code>SignalHandlerOptions.NO</code> means Ctrl-C arrives as a plain <code>KeyboardInterrupt</code>, <code>stop()</code> publishes zero, and then we shut down.</div>
+
+<!-- ============================================================ -->
+<h2 id="world"><span class="n">10</span>The plank in Gazebo</h2>
+<p><code>burger_plank.sdf</code> is the course's <code>turtlebot3_burger/model.sdf</code> with two additions. Everything else is byte-for-byte the course file, generated by a script and validated with <code>gz sdf -k</code>.</p>
+{{code|burger_plank.sdf|    <!-- R7021E project: the plank|    <joint name="base_joint"}}
+<div class="tablewrap"><table>
+<tr><th>Choice</th><th>Why</th></tr>
+<tr><td>z = 0.21 m</td><td>The lidar's top is about 0.19 m. The plank sits above it, so the scan still works and still sees the posts.</td></tr>
+<tr><td>mass 0.1 kg</td><td>Light enough not to change how the Burger drives. The diff-drive plugin's acceleration limit still applies.</td></tr>
+<tr><td>inertia ixx = m(W²+h²)/12 …</td><td>Solid box formula. Rounding to 3 digits first broke the triangle inequality ixx + iyy ≥ izz, and <code>gz sdf -k</code> said "invalid inertia". Exact values fixed it.</td></tr>
+<tr><td>collision on</td><td>Contact in Gazebo is real (Q4). If the plank hits a post, the robot is physically stopped or knocked.</td></tr>
+<tr><td>fixed joint to base_link, no pose offset in x</td><td>Centred on the axle (Q3).</td></tr>
+</table></div>
+{{code|burger_plank.sdf|    <!-- R7021E project: ground-truth|  </model>}}
+<p>The PosePublisher plugin publishes the model's true pose on the Gazebo topic <code>/model/burger/pose</code>, and the launch file bridges it to the ROS topic <code>/ground_truth</code>. The controller never subscribes to it.</p>
+
+<!-- ============================================================ -->
+<h2 id="launch"><span class="n">11</span>The launch file</h2>
+{{code|project_sim.launch.py|def setup|def generate_launch_description}}
+<div class="tablewrap"><table>
+<tr><th>Piece</th><th>Why</th></tr>
+<tr><td><code>from r7021e_project.mpc_node import SCENARIOS</code></td><td>Q13: one table. The launch file never has its own copy of a coordinate.</td></tr>
+<tr><td><code>OpaqueFunction(function=setup)</code></td><td>A launch argument is only a <em>substitution</em> until launch time. To use its value in Python (to look up the table), you need an OpaqueFunction, which gets the resolved value through <code>.perform(context)</code>.</td></tr>
+<tr><td><code>gz_args: '-r -s -v2 '</code></td><td><code>-r</code> run immediately, <code>-s</code> server only (no window), <code>-v2</code> quiet. The window is a separate <code>-g</code> process, only with <code>gui:=true</code>.</td></tr>
+<tr><td><code>ros_gz_sim create -string &lt;sdf&gt;</code></td><td>Spawns each post and wall as a static model, from an SDF string built from the table.</td></tr>
+<tr><td>course bridge yaml</td><td>Exactly the course's own bridge: /odom, /tf, /scan, /cmd_vel as <b>TwistStamped</b>, /clock.</td></tr>
+<tr><td><code>truth_bridge</code></td><td>One extra one-way bridge, <code>[gz.msgs.Pose</code> → PoseStamped. The <code>[</code> means Gazebo to ROS.</td></tr>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="eval"><span class="n">12</span>The evaluation harness</h2>
+{{code|plot_run.py|def grade|def report}}
+<ul>
+<li><b>Clearance</b> uses ground truth and the rectangle, never odometry and never discs (Theory Guide §15).</li>
+<li><b>Path error</b> is the distance from the true position to the reference <em>curve</em>, not to the moving reference point. That needs no clock alignment between the bag and the node's start time, and it measures what the eye sees: how far the robot left the line.</li>
+<li><b>Goal reached</b> means within 0.08 m of ground truth. The node stops at 0.05 m by <em>odometry</em>, and odometry sits 1–2 cm off truth in Gazebo, so 0.05 by truth would mark some correct stops as failures.</li>
+<li><b>Pass</b> (scenario 2): goal reached and clearance &gt; 0 to every obstacle.</li>
+<li><b>Reached in</b> is timed from the first non-zero <code>/cmd_vel</code>, so Gazebo and node start-up aren't counted (a code-review fix: before it, 8.9 s read as 12.7 s).</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="move"><span class="n">13</span>The node, part 7: things that move (scenarios 3 and 4)</h2>
+<p>Scenarios 1 and 2 only needed constants. Scenarios 3 and 4 need the node to know where something is <em>now</em>, and to write where it will be into the TVPs, one value per horizon step. Theory Guide §4 is the idea, §13 and §14 are the reasoning. This section is the code.</p>
+<h3>The two scenarios in the table</h3>
+{{code|mpc_node.py|# Scenario 3: a cylinder crosses|CIRCLE = dict(}}
+<ul>
+<li><code>movers</code> is a list of moving cylinders: start (x0, y0), velocity (vx, vy), radius. <code>obstacles=[]</code> because nothing is still. The goal is a fixed point, (2.0, 0.0), so the robot drives straight and the obstacle crosses its line at 4.0 s (1.2 m at 0.30 m/s).</li>
+<li><code>target</code> is the moving goal: a ball with a start and a constant velocity. <code>goal='target'</code> tells the node to chase it. The box is larger (y ±2.5 m) so the ball stays inside it for the whole run.</li>
+<li>Gazebo, the node, the grader and the desk sim all read these entries. One table again.</li>
+</ul>
+<h3>Two small functions, shared with the desk sim</h3>
+{{code|mpc_node.py|def predict_mover|# ----------- the MPC}}
+<div class="tablewrap"><table>
+<tr><th>Code</th><th>What it means</th></tr>
+<tr><td><code>if mode == 'now': return [(pos[0], pos[1])] * (steps + 1)</code></td><td>The baseline. The same centre at every horizon step: the obstacle looks still. The controller reacts only when it is already close.</td></tr>
+<tr><td><code>pos[0] + vel[0] * (delay_steps + k) * t_step</code></td><td>With its future: a straight line at the known velocity. <code>delay_steps + k</code> because step 0 of the horizon is where the <em>robot</em> will be one tick from now (the node pushes its pose forward by <code>delay_steps</code>), so the obstacle is pushed forward by the same amount.</td></tr>
+<tr><td><code>if mode == 'hold' or len(points) &lt; 3</code></td><td>The baseline for the goal: repeat the latest observation. Also the fallback, since a line needs at least three points.</td></tr>
+<tr><td><code>t = np.asarray(times) - times[-1]</code></td><td>Times measured back from the latest sample, so the latest is t = 0 and the fitted line's value at t = 0 is the estimate of where the ball is now.</td></tr>
+<tr><td><code>tc = t - t.mean()</code> and <code>v = (tc * (p - p.mean)).sum / (tc**2).sum</code></td><td>The least-squares slope, Theory Guide §14, for x and y at once. Centring the times is what makes it this short.</td></tr>
+<tr><td><code>now = p.mean(axis=0) - v * t.mean()</code></td><td>The fitted line evaluated at t = 0. It is a smoothed position: with 2 cm of noise it is about 1.2 cm off instead of 2.</td></tr>
+<tr><td><code>now + v * (delay_steps + k) * t_step</code></td><td>Extend the line over the horizon, shifted by the same delay as the obstacle.</td></tr>
+</table></div>
+<p>They are plain functions with no ROS in them, which is why the desk sim could import them and why the numbers match between desk and Gazebo.</p>
+<h3>In the node: what is new in each tick</h3>
+{{code|mpc_node.py|    # ------------------------------------------------------------ moving things|    def stop}}
+<div class="tablewrap"><table>
+<tr><th>Step in <code>control_tick</code></th><th>Why it is there</th></tr>
+<tr><td><code>world_ready()</code></td><td>Nothing is solved until the pose of every moving thing has arrived. Without it, the first ticks would plan against an obstacle at (0, 0).</td></tr>
+<tr><td><code>drive_world()</code></td><td>Publishes the Twist that keeps the obstacle and the ball moving. The first tick starts them, so the obstacle starts with the robot in both runs of a pair. It also adds noise to the ball's position and keeps the last <code>fit_ticks</code> observations.</td></tr>
+<tr><td><code>predict_mover(...)</code> per obstacle</td><td>The centre for each horizon step, with its future or frozen at now: the <code>prediction</code> parameter.</td></tr>
+<tr><td><code>horizon_points()</code> for a target</td><td>Calls <code>estimate_goal</code>, with <code>fit</code> or <code>hold</code>: the <code>goal_estimate</code> parameter.</td></tr>
+<tr><td><code>publish_ghosts()</code></td><td>Draws where the controller believes the obstacle will be at steps 0, 5, 10, 15, 20, and the goal estimate. It is what you see in RViz and in the video. The ghosts run along the path with its future and sit on one spot without it.</td></tr>
+<tr><td>write <code>ox, oy</code> into the TVP</td><td>Exactly like <code>xdes, ydes</code>: <code>self.tvp['_tvp', k, 'ox1'] = ox</code>.</td></tr>
+<tr><td><code>release()</code> in <code>main</code></td><td>When the node ends, the obstacle and the ball are told to stop. Not in <code>stop()</code>, which also runs every tick after the goal is reached, and the obstacle should keep going then.</td></tr>
+</table></div>
+<div class="box key">A pair differs in one node parameter. Both runs start the moving thing on the same tick, use the same code and the same noise seed. If <code>future</code> passes and <code>now</code> touches, the only possible reason is what was written into the TVP.</div>
+<div class="box key">The node reads the obstacle's position from Gazebo and knows its velocity from the table. That is the proposal's assumption, "the obstacle follows a trajectory we choose, so we know its future and hand it over". A real robot would need a tracker for both. The robot's own pose still comes from <code>/odom</code> only.</div>
+
+<!-- ============================================================ -->
+<h2 id="movingworld"><span class="n">14</span>Things that move: Gazebo, launch and grading</h2>
+{{code|project_sim.launch.py|# The pose publisher is the one the plank Burger carries|def spawn(}}
+<div class="tablewrap"><table>
+<tr><th>Choice</th><th>Why</th></tr>
+<tr><td><code>VelocityControl</code> plugin</td><td>A Gazebo system that listens on <code>/model/&lt;name&gt;/cmd_vel</code> (a <code>gz.msgs.Twist</code>) and keeps the model at that velocity. No wheels, no friction, no controller to tune. The node publishes the same Twist every tick.</td></tr>
+<tr><td>mass 50 kg, gravity off</td><td>Heavy so the plank cannot push it aside. Gravity off so it needs no ground contact and keeps its height.</td></tr>
+<tr><td>obstacle has collision, the ball does not</td><td>The obstacle must be able to hurt the plank, or contact could never be measured. The ball is only a goal: it must not push the robot.</td></tr>
+<tr><td><code>PosePublisher</code> at 30 Hz</td><td>The same plugin the Burger carries. The node reads the obstacle's and the ball's position from it, and the bag records it for the grader.</td></tr>
+<tr><td><code>model_bridge</code>: <code>[</code> and <code>]</code></td><td>Two bridge arguments per model. <code>[gz.msgs.Pose</code> is Gazebo to ROS (the pose). <code>]gz.msgs.Twist</code> is ROS to Gazebo (the velocity command). Remapped to <code>/mover_1/pose</code>, <code>/mover_1/cmd_vel</code>, <code>/target/pose</code>, <code>/target/cmd_vel</code>.</td></tr>
+<tr><td>spawn at <code>m['x0'], m['y0']</code></td><td>From the table, so Gazebo and the controller can never disagree on where it starts.</td></tr>
+</table></div>
+<h3>How a moving obstacle is graded</h3>
+<p>The clearance is the same exact-rectangle formula as before (Theory Guide §15). What changes is the obstacle's centre: it is read from the bag's <code>/mover_1/pose</code> and interpolated to the time of every ground-truth sample of the robot, so the plank is always compared with the obstacle <em>at that instant</em>. The minimum over the run is reported together with the time it happened. A value of 0 or less is contact.</p>
+<h3>How a moving goal is graded</h3>
+<p>The distance between the robot's ground-truth position and the ball's ground-truth position, at every sample. Three numbers: when it first got within 0.2 m, the closest it got, and the mean over the last 5 s. Only the time the controller was commanding counts, from the first command to the last: the seconds after Ctrl-C would count a robot that has stopped against a ball that has stopped too.</p>
+
+<!-- ============================================================ -->
+<h2 id="results"><span class="n">15</span>Results</h2>
+{{RESULTS}}
+
+<!-- ============================================================ -->
+<h2 id="bugs"><span class="n">16</span>Silent failures we hit</h2>
+<div class="box bug"><b>Gate 1 task 3: the goal that never arrived.</b> Two bags, 671 and 1307 <code>/cmd_vel</code> messages, every one exactly zero, and 0 predictions. <code>/new_position</code> is not even a topic in either bag, so the recorder never saw a publisher. Either the goal was published before the node existed (a <code>ros2 topic pub</code> message isn't stored for late subscribers), or from a terminal on another domain. How it was proved: same node and command, goal published 10 s after the node printed its first line, and the robot drove to (1.78, 0.01). <b>Lesson:</b> the node logs <code>NEW GOAL</code>. No such line means no goal, and nothing else will tell you.</div>
+<div class="box bug"><b>"RViz shows nothing of the robot."</b> The Lab 2 config has no display that draws the body: no RobotModel, and no marker for the footprint. Odometry arrows and TF axes are easy to miss. Fixed with a RobotModel display and <code>/mpc_footprint</code>. Verified by capturing the RViz window in a headless run: everything shows, with or without <code>use_sim_time</code>, so the clock was not the cause. A terminal on another domain would also give an empty RViz, so always check <code>printenv ROS_DOMAIN_ID</code> first.</div>
+<div class="box bug"><b>Solve time tripled by a window.</b> The first desk sweep gave a 118 ms median for Lab 2's own task. Your Gazebo GUI was still open. With it closed: 20–33 ms. Any solve-time number must say whether the GUI was running.</div>
+<div class="box bug"><b>Ctrl-C didn't stop the robot.</b> §9. Inherited from Lab 2, and invisible unless you read the node's last log lines.</div>
+<div class="box bug"><b>The graze nobody saw coming.</b> First s1a run with three discs: the desk simulation had predicted +3.7 mm of real clearance. At closest approach odometry was 2.7 cm off ground truth, and the real plank touched the obstacle (−2.1 mm, 18.6 s after the first command). Afterwards odometry drifted away from the truth, 0.22 m at 25 s and 1.03 m at the end, and the robot calmly tracked a circle in the wrong place for the rest of the lap. We did not test why the drift started. Every node log line looked fine. Only ground truth showed it. <b>Lesson:</b> a tighter footprint spends exactly the slack that used to absorb odometry error. Fix: a 2 cm safety margin, as Lab 3 did with its inflation radius.</div>
+<div class="box bug"><b>Starting inside a keep-out.</b> s1b's first obstacle position put the origin inside the one-disc keep-out. The soft constraint would have shoved the robot out, and the comparison would have measured that shove instead of the footprint. Caught by arithmetic before any run (LOG D2).</div>
+
+<div class="box bug"><b>The recorder that died quietly.</b> Scenario 3 and 4 runs were scripted. A background job in a non-interactive shell <em>ignores Ctrl-C</em>, so <code>ros2 bag record</code> never got its interrupt, had to be killed, and left a bag with data but no <code>metadata.yaml</code>. Nothing printed an error. <code>run_headless.py</code> resets the interrupt for every child and checks that <code>metadata.yaml</code> exists. <b>Lesson:</b> a recording is only a recording once <code>ros2 bag info</code> can read it.</div>
+<div class="box bug"><b>A goal that proved nothing.</b> The first moving goal drifted away slowly at 0.12 m/s. The robot is faster, so it catches up whatever it believes, and the fit and the hold gave 0.27 and 0.29 m. The ball also left the box before the run ended. Nothing was wrong with the estimator: the experiment could not show it. The geometry that works has the ball crossing the robot's path at 0.21 m/s. <b>Lesson:</b> before trusting a comparison, check that the situation can tell the two options apart.</div>
+<div class="box bug"><b>Passing by a hair.</b> At the desk, the controller with its future passed the obstacle with 1 to 2 cm of real clearance, about as close as the constraint allows. Odometry in Gazebo was 1.4 to 3.5 cm off in scenarios 1 to 3 (the largest error over a run), so that success would have been a coin flip. In Gazebo, with the extra keep-out, the real clearance came out at +0.048 to +0.056 m. 0.03 m of extra keep-out for moving obstacles moved the desk clearance to +0.044 m. <b>Lesson:</b> an optimiser uses every centimetre it is given, so give margin where there is uncertainty.</div>
+<div class="box bug"><b>The window that counted a stopped robot.</b> The first "mean distance over the last 5 s" for scenario 4 included the seconds after the node was stopped, when robot and ball are both standing still. Restricting it to the time the controller was commanding changed the numbers. <b>Lesson:</b> a metric needs a start and an end, and the bag keeps recording after the experiment ends.</div>
+
+<!-- ============================================================ -->
+<h2 id="fiddle"><span class="n">17</span>Things to try yourself</h2>
+<p>Each one is a single change, and each has a prediction you can check. Use the desk sim first (seconds), then Gazebo.</p>
+<div class="box fiddle"><b>Two discs.</b> Add <code>'two': dict(offsets=disc_chain(2)[0], radius=disc_chain(2)[1], sweep=PLANK_SWEEP)</code> to FOOTPRINTS. Prediction: r = 0.160, so with the margin it needs 2(0.16 + 0.02) = 0.36 m. It passes s2_040 and rejects s2_034.<br><code>python3 desk/sim_scenario.py --scenario s2_034 --footprint two</code></div>
+<div class="box fiddle"><b>Make the slack cheap.</b> <code>-p obstacle_penalty:=10.0</code>. Prediction: one disc starts squeezing through gaps it should reject, and real clearance drops. That shows why ρ must beat the tracking cost.</div>
+<div class="box fiddle"><b>Longer horizon.</b> <code>-p n_horizon:=40</code> with <code>gui:=false</code>, and read <code>/mpc_solve_time</code>. Prediction: p95 near 170 ms on s2_030 three, over the tick. Watch whether the motion gets worse.</div>
+<div class="box fiddle"><b>Turn delay compensation off.</b> <code>-p delay_steps:=0</code> on s1a. Lab 2 predicted more jerk with uncompensated delay. Compare the path error.</div>
+<div class="box fiddle"><b>Tell the obstacle's future to nobody.</b> Scenario 3 with <code>-p prediction:=now</code>. Prediction from the runs we have: contact at about 3.5 s, then the true heading and odometry's part ways and the robot ends about 1 m short of the goal. This is the half of the pair that fails.</div>
+<div class="box fiddle"><b>Take the extra margin off the obstacle.</b> <code>-p mover_margin:=0.0</code> with <code>prediction:=future</code>. Prediction: real clearance drops to 1 or 2 cm, and in some runs below zero.</div>
+<div class="box fiddle"><b>Stop the noise.</b> Scenario 4 with <code>-p goal_noise:=0.0</code>. Prediction: fit and hold both do better, and the fit gains less over the hold than with noise, since there is nothing to average. Then try <code>-p goal_noise:=0.08</code>: the fit should hold up much better than the hold, which follows every jump.</div>
+<div class="box fiddle"><b>A shorter or longer window.</b> <code>-p fit_window:=0.4</code> and <code>-p fit_window:=2.0</code>. Prediction: the short window is noisier, the long window is smoother. For this straight-line ball both work, a ball that turned would punish the long one.</div>
+<div class="box fiddle"><b>Speed up the obstacle.</b> In <code>SCENARIOS['s3']</code> change <code>vy</code> to −0.45. Prediction: it crosses earlier, the robot has less time, and with its future the clearance shrinks or it gives way sooner. Use the desk sim first: <code>python3 desk/sim_scenario.py --scenario s3 --footprint three --prediction future --goal 2.0,0.0</code>.</div>
+<div class="box fiddle"><b>Take the margin away.</b> <code>-p safety_margin:=0.0</code>. Prediction: three discs pass s2_028 again, and s1a three-disc grazes the obstacle again. The old bags in <code>bags/margin0/</code> are exactly this experiment.</div>
+
+<!-- ============================================================ -->
+<h2 id="oral"><span class="n">18</span>Oral questions, with answers</h2>
+<details><summary>Walk me through one control tick.</summary>Check odometry is fresh. Write the reference for each of the N+1 steps into the TVP. Push the measured pose forward by one tick using the last command (delay compensation). Call <code>make_step</code>, which solves the whole horizon with IPOPT. Time it and publish the time. If the solve failed, hold the last command for up to three ticks. Otherwise clip and publish the first input, and publish the predicted path.</details>
+<details><summary>How does the solver know where the plank is?</summary>It doesn't know about the plank. It knows three points, x + d·cos θ and y + d·sin θ for d ∈ {−0.167, 0, 0.167}, as CasADi expressions of the state, and it keeps each one at least r<sub>o</sub> + 0.130 from every obstacle centre.</details>
+<details><summary>How do you know the plank didn't hit anything?</summary>Gazebo's ground-truth pose, the exact 0.50 × 0.20 rectangle, and the clamp distance to each obstacle circle at every sample. The minimum over the run is reported. It's independent of both odometry and the disc model.</details>
+<details><summary>Why is the box soft? Isn't that unsafe?</summary>A hard bound on a measured state is unrecoverable once odometry puts you outside it: Lab 2 task 4. A linear penalty with ρ = 10⁴ is exact, so slack is zero whenever staying inside is possible. In scenario 2 the Gazebo walls are real, so any squeeze would show as contact in the ground-truth clearance.</details>
+<details><summary>Why N = 20 when you planned to measure 20, 40 and 60?</summary>We did measure. With the Gazebo window closed, N = 40 has a 95th-percentile solve of 174 ms on the hardest scenario, beyond the 100 ms tick. N = 20 has 59 ms. Its reach of 0.44 m is enough for scenarios 1 and 2, because every detour there is under 0.2 m.</details>
+<details><summary>What did three discs cost in computation?</summary>Read it from the solve-time column in §15: about 1.5× the median of one disc (33 against 22 ms), not 3×, because IPOPT's cost isn't proportional to the number of constraints.</details>
+<details><summary>What does the one-disc robot do at a gap it rejects?</summary>It drives up to where its 0.389 m keep-outs (0.10 + 0.269 + 0.02) meet the centreline and stops. The goal cost wants it forward, the slack cost (10⁴ per unit) forbids it, and the box forbids going round. That's a local minimum, the honest behaviour of a controller that believes it doesn't fit.</details>
+<details><summary>Where does odometry come from in Gazebo, and does it drift?</summary>From the diff-drive plugin, which integrates the simulated wheel motion. It drifts a little: 1–2 cm by the end of our runs, which is why we grade on ground truth.</details>
+<details><summary>Why one launch file, when Lab 1 and 2 said no launch files?</summary>Labs 1 and 2 used the course's own launch file for Gazebo. The project needs a world the course doesn't have (posts, walls, a robot with a plank, a ground-truth bridge). The launch file only does what <code>turtlebot3_bringup</code> does on the robot, and the controller still runs in its own terminal.</details>
+<details><summary>Why a 2 cm safety margin, and what did it cost?</summary>The first s1a run with three discs grazed the obstacle by 2 mm. Odometry was 2.8 cm off ground truth at that moment, and the three-disc plan left only about 4 mm of real clearance. 2 cm covers the measured error, and it's the same idea as Lab 3's inflation radius of 0.120 for a 0.105 robot. It cost 4 cm of gap: three discs now need 0.30 m instead of 0.26, so 0.28 is rejected. It still meets the proposal's 0.30 m.</details>
+<details><summary>What would you change for the real robot?</summary>Drop <code>use_sim_time</code>. Measure the actual actuation delay for <code>delay_steps</code>. There is no ground truth, so clearance would need a tape measure or a camera. And the plank would block nothing, since it sits above the lidar.</details>
+
+<details><summary>How does the controller know where the moving obstacle will be?</summary>It reads the obstacle's current position from Gazebo, and its velocity is in the scenario table because we chose the path. The future is a straight line: position now plus velocity times (delay_steps + k) time steps, for each horizon step k. That is the proposal's assumption. A real robot would need a tracker for both position and velocity.</details>
+<details><summary>What does the robot do when it knows the obstacle's future?</summary>It drives straight at 0.22 m/s until 1.8 s, about 2.2 s before the obstacle crosses its line and close to the 2.0 s horizon. Then it turns clockwise, brakes to a stop at x = 0.70 to 0.71 m at about 3.4 s, and keeps turning in place. Its heading is -61 degrees when the obstacle crosses at 3.98 s, with 0.08 to 0.09 m of clearance, and -90 degrees at 4.7 s, which puts the plank along the obstacle's direction of travel. The robot turns back and drives on at about 5 s, and reaches the goal in 11.4 to 11.5 s, against 8.9 s for the same drive past the open corridor of scenario 2. We expected it to wait, and it also turns. Our reading is that a plank lying along the obstacle's path is the cheapest way to keep the keep-out, and we did not test that.</details>
+<details><summary>Why is the clearance with its future only about 5 cm?</summary>It matches the margins. The keep-out is 0.28 m (obstacle 0.10, discs 0.130, margin 0.02, extra for moving 0.03), so with a disc centre exactly on the keep-out the surfaces are 0.28 − 0.10 − 0.130 = 0.05 m apart. We measured +0.048, +0.049 and +0.056 m. The solver has no reason to leave more room than the constraint asks for, and the real plank is inside the discs, so it can be a little more.</details>
+<details><summary>Why 0.03 m of extra keep-out for a moving obstacle?</summary>In the desk runs the controller that knew the future passed with 1 to 2 cm, and the largest odometry error over a run in Gazebo was 1.4 to 3.5 cm in scenarios 1 to 3, so passing would have been a coin flip. It is the same idea as the 2 cm margin: uncertainty about where things are goes into the keep-out.</details>
+<details><summary>What exactly goes wrong when the controller only knows where the obstacle is now?</summary>It sees a still obstacle and drives straight at 0.22 m/s. Its first reaction is at about 3.2 s, when the obstacle is 0.24 m from the robot's line. It brakes and begins to turn, and the plank touches the obstacle at 3.5 s (−6 to −8 mm, for 0.5 to 0.7 s). After that the true heading keeps turning clockwise, by 300 to 550 degrees over the run, while odometry's heading does not follow, so the controller steers from a pose that is wrong by about a metre. The robot stops 1.0 to 1.6 m short of the goal. We do not know why the true heading kept turning, and we did not test whether the wheels slipped. The symptom, odometry disagreeing with the truth after a contact, is the same as in the zero-margin graze of scenario 1.</details>
+<details><summary>How do you make sure the pair is fair?</summary>One node parameter differs. The obstacle and the ball are started by the node on its first control tick, so they start with the robot. The scenario table, the code and the noise seed are the same. The grading is from the ground truth, not from anything the controller believes.</details>
+<details><summary>Why fit a line to 10 points instead of using the last two?</summary>Noise. With 2 cm of noise and a tick of 0.1 s, the speed from two points has a standard deviation of about √2 · 0.02 / 0.1 = 0.28 m/s, more than the ball's speed (0.21 m/s). A least-squares line through 10 points has about 0.02 / √(Σ(t − t̄)²) = 0.02 / 0.91 = 0.022 m/s. The fitted position at the latest time is also about 1.2 cm off instead of 2 cm.</details>
+<details><summary>Why not a Kalman filter?</summary>For a straight line at constant speed, a least-squares fit over a short window does the same job and needs no model of the noise or the dynamics. A Kalman filter would be the next step for a goal that accelerates or turns: it can carry an acceleration state and weight old data by how much it can be trusted. We name it as the alternative and did not need it.</details>
+<details><summary>Why add noise to the ball's position at all?</summary>With exact positions the fit is almost the same as holding, and there is nothing for a fit to average out. A real tracker would give noisy positions, so 2 cm of Gaussian noise is a fair stand-in. Both runs of a pair use the same seed, so they see the same noise.</details>
+<details><summary>Your first moving goal showed no difference. What did you change?</summary>The ball moved slowly away at 0.12 m/s, and the robot (0.22 m/s) catches up whatever it believes. We made the ball cross the robot's path at 0.21 m/s, so predicting where it will be matters. The lesson is that the geometry decides whether a prediction helps.</details>
+<details><summary>What would break the goal estimator?</summary>A goal that turns or changes speed, because the line is extended straight. For a turn we would expect the fit to lag by about half its window (0.5 s), but we did not test a turning goal. A shorter window reacts faster and is noisier. A Kalman filter with an acceleration state would be the answer.</details>
+<details><summary>You said the controller only reads odometry. Why does it read the obstacle's pose from Gazebo?</summary>They are different quantities. The robot's own pose is estimated from its wheels, as on the real robot. The obstacle's pose stands in for what a tracker or a camera would provide. The proposal hands over the obstacle's future, so this is the stated assumption.</details>
+<p class="ts" style="margin-top:40px">Generated {{DATE}} from the code in the repo at that moment. Rebuild it with <code>python3 STUDY/build_study_guide.py</code> after the code changes, and the code blocks follow.</p>
+</div>
+</body>
+</html>

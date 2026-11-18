@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Defence Guide</title>
+<style>
+:root{
+  --ink:#1c2230;--soft:#48506a;--paper:#f7f5ef;--card:#fff;--line:#e2ded2;--accent:#1d4ed8;--accent-soft:#e0e7ff;
+  --teal:#0f766e;--teal-soft:#d7ede9;--red:#b11a3a;--red-soft:#fbe0e6;--amber:#b45309;--amber-soft:#fdeccf;
+  --green:#15803d;--green-soft:#dcf1e1;--code:#f0ede4;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#e6e8ee;--soft:#aab1c3;--paper:#12151c;--card:#1a1f2a;--line:#2b3242;--accent:#8aa9ff;--accent-soft:#1b2547;
+  --teal:#3fc1b3;--teal-soft:#123430;--red:#ef6b8a;--red-soft:#3a1a24;--amber:#f0a35a;--amber-soft:#3a2a12;
+  --green:#5fd38a;--green-soft:#14301e;--code:#232a38;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+h1{margin:0 0 6px;font-size:28px;line-height:1.2}
+h2{margin:40px 0 8px;font-size:23px;border-bottom:2px solid var(--line);padding-bottom:6px}
+h3{margin:0 0 6px;font-size:18px}
+p{margin:8px 0}
+.lead{color:var(--soft)}
+.box{border-radius:12px;padding:12px 16px;margin:12px 0;background:var(--card);border:1px solid var(--line)}
+.how{background:var(--accent-soft);border-color:transparent}
+.derived{background:var(--amber-soft);border-color:transparent}
+.nots{background:var(--red-soft);border-color:transparent}
+.obs{background:var(--teal-soft);border-color:transparent}
+.tag{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-right:6px}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.good.on{background:var(--green);border-color:var(--green)}
+button.mid.on{background:var(--amber);border-color:var(--amber)}
+button.bad.on{background:var(--red);border-color:var(--red)}
+textarea,input[type=text],input[type=number],select{width:100%;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px}
+textarea{min-height:64px;resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);cursor:pointer;user-select:none}
+.chip.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
+.chip.orphan{border-style:dashed}
+.chip small{opacity:.7;margin-left:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:16px 0}
+.card .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+ul{margin:6px 0;padding-left:22px}
+li{margin:3px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px;background:var(--card)}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--code)}
+td.hide{color:transparent;background:var(--code);cursor:pointer;user-select:none}
+td.hide::after{content:"click to show";color:var(--soft);font-size:12px;position:absolute;margin-left:-3px}
+td.hide{position:relative}
+figure{margin:10px 0}
+figure img{width:100%;height:auto;border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--soft)}
+svg text{fill:var(--ink);font:12px sans-serif}
+.progress{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--soft)}
+.progress b{color:var(--ink)}
+details{margin:8px 0}
+summary{cursor:pointer;font-weight:600}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end}
+.calc label{font-size:13px;color:var(--soft);display:block}
+code{background:var(--code);padding:1px 5px;border-radius:5px;font:14px ui-monospace,Menlo,Consolas,monospace}
+.dont{font-size:14px;color:var(--red);margin-top:6px}
+.who{font-size:12px;color:var(--soft);margin-left:6px}
+.nav a{margin-right:14px;color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Defence guide: the dynamics and the questions</h1>
+<p class="lead">R7021E project, group 6. For the talk on Thursday 29 October. Nothing here is read passively: you predict, then check.</p>
+
+<div class="box how">
+  <b>How to use it, about 90 minutes in total</b>
+  <ol>
+    <li><b>Map (10 min).</b> Link the keywords with a reason. Wrong links are fine, a thin map is the point.</li>
+    <li><b>Dynamics (40 min).</b> For each card write your prediction first, then reveal. Rate yourself honestly.</li>
+    <li><b>Derive it (10 min).</b> Compute the numbers yourself before you press the button.</li>
+    <li><b>Questions (30 min).</b> Answer aloud, then reveal. Repeat only the ones you rated red.</li>
+  </ol>
+  <div class="progress" id="progress"></div>
+  <div class="nav" style="margin-top:6px"><a href="#map">Map</a><a href="#dyn">Dynamics</a><a href="#derive">Derive it</a><a href="#qs">Questions</a><a href="#nums">Numbers</a><a href="#day">On the day</a></div>
+</div>
+
+<h2 id="map">1. Blind map</h2>
+<p>Click one keyword, then another, and write in one sentence how they are connected. Your links are saved in this browser.</p>
+<div class="chips" id="chips"></div>
+<div class="box" id="linkform" hidden>
+  <div id="linkhead"></div>
+  <input type="text" id="linkwhy" placeholder="They are connected because ...">
+  <div class="row" style="margin-top:8px"><button id="linksave">Save link</button> <button id="linkcancel">Cancel</button></div>
+</div>
+<div id="links"></div>
+<details><summary>Gaps to find on your map</summary><ul id="gaps"></ul></details>
+<details><summary>Claims to attack (write where each one breaks, then reveal)</summary><div id="claims"></div></details>
+
+<h2 id="dyn">2. The dynamics: predict, then check</h2>
+<p>Ten episodes from the recorded runs. Times are from the first non-zero command. Boxes: green is measured, amber is calculated from the constraint (not measured), red is what we do not know.</p>
+<div id="cards"></div>
+
+<h2 id="derive">3. Derive it yourself</h2>
+<div class="card">
+  <h3>Disc radius and the gap a footprint needs</h3>
+  <p>Predict r for n = 4 first. Then check.</p>
+  <div class="calc">
+    <div><label>discs n</label><input type="number" id="c1n" value="3" min="1" max="10"></div>
+    <div><label>margin (m)</label><input type="number" id="c1m" value="0.02" step="0.005"></div>
+  </div>
+  <p id="c1out"></p>
+</div>
+<div class="card">
+  <h3>Where does the one-disc robot stop?</h3>
+  <p>Ring radius R = r_post + r_disc + margin around each post. The post centres are g/2 + r_post from the centre line. The robot stops where the ring reaches the centre line. Compute it, then compare with the table of runs.</p>
+  <div class="calc">
+    <div><label>gap g (m)</label><input type="number" id="c2g" value="0.30" step="0.01"></div>
+  </div>
+  <p id="c2out"></p>
+  <table id="c2tab"></table>
+</div>
+<div class="card">
+  <h3>Reach</h3>
+  <div class="calc">
+    <div><label>N</label><input type="number" id="c3n" value="20"></div>
+    <div><label>t_step (s)</label><input type="number" id="c3t" value="0.1" step="0.05"></div>
+    <div><label>v (m/s)</label><input type="number" id="c3v" value="0.22" step="0.01"></div>
+  </div>
+  <p id="c3out"></p>
+</div>
+
+<h2 id="qs">4. Questions</h2>
+<div class="row" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+  <select id="qarea" style="width:auto"></select>
+  <select id="qwho" style="width:auto"><option value="">group and individual</option><option value="group">group</option><option value="individual">individual</option></select>
+  <button id="qask">Ask me one</button>
+  <button id="qred">Only the red ones</button>
+  <button id="qall">Show all</button>
+</div>
+<div id="qlist"></div>
+
+<h2 id="nums">5. Numbers</h2>
+<p>Click a value to show it. Say it aloud first.</p>
+<div id="numbers"></div>
+
+<h2 id="day">6. On the day</h2>
+<div class="box how">
+  <ul>
+    <li>Answer in this order: one sentence, the number, then what we do not know.</li>
+    <li>"We did not test that" is an acceptable answer. Say how you would test it.</li>
+    <li>Never say the wheels slipped. Never say the fit cuts across. Never say the turn was complete at the crossing.</li>
+    <li>Measured, calculated and read are different things. Say which one it is.</li>
+    <li>The video is the controller's view at the odometry pose. The numbers are the ground truth.</li>
+  </ul>
+</div>
+
+</div>
+
+<script>
+const D = {{DATA}};
+
+// ---------- storage (local, may be blocked)
+let S = {links: [], notes: {}, rate: {}, qrate: {}, crit: {}};
+const KEY = 'defence-guide-v1';
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} progress(); }
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; };
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function progress() {
+  const c = D.cards.length, q = D.questions.length;
+  const cr = Object.values(S.rate), qr = Object.values(S.qrate);
+  const cnt = (a, v) => a.filter(x => x === v).length;
+  $('progress').innerHTML =
+    '<span>Map links: <b>' + S.links.length + '</b></span>' +
+    '<span>Cards: <b>' + cr.length + '/' + c + '</b> (red ' + cnt(cr, 0) + ')</span>' +
+    '<span>Questions: <b>' + qr.length + '/' + q + '</b> (red ' + cnt(qr, 0) + ')</span>';
+}
+
+// ---------- map
+let sel = null, pair = null;
+function drawChips() {
+  const c = $('chips'); c.innerHTML = '';
+  const deg = {}; S.links.forEach(l => { deg[l[0]] = (deg[l[0]] || 0) + 1; deg[l[1]] = (deg[l[1]] || 0) + 1; });
+  D.keywords.forEach((k, i) => {
+    const ch = el('span', 'chip' + (sel === i ? ' sel' : '') + (S.links.length && !deg[i] ? ' orphan' : ''), esc(k) + (deg[i] ? '<small>' + deg[i] + '</small>' : ''));
+    ch.onclick = () => {
+      if (sel === null) { sel = i; }
+      else if (sel === i) { sel = null; }
+      else { pair = [sel, i]; sel = null; $('linkform').hidden = false; $('linkhead').innerHTML = '<b>' + esc(D.keywords[pair[0]]) + '</b> and <b>' + esc(D.keywords[pair[1]]) + '</b>'; $('linkwhy').value = ''; $('linkwhy').focus(); }
+      drawChips();
+    };
+    c.appendChild(ch);
+  });
+}
+$('linksave').onclick = () => { const w = $('linkwhy').value.trim(); if (pair && w) { S.links.push([pair[0], pair[1], w]); save(); } $('linkform').hidden = true; pair = null; drawLinks(); drawChips(); };
+$('linkcancel').onclick = () => { $('linkform').hidden = true; pair = null; };
+function drawLinks() {
+  const box = $('links'); box.innerHTML = '';
+  S.links.forEach((l, i) => {
+    const r = el('div', 'box', '<b>' + esc(D.keywords[l[0]]) + '</b> and <b>' + esc(D.keywords[l[1]]) + '</b>: ' + esc(l[2]) + ' ');
+    const b = el('button', '', 'remove'); b.onclick = () => { S.links.splice(i, 1); save(); drawLinks(); drawChips(); };
+    r.appendChild(b); box.appendChild(r);
+  });
+}
+D.gapQuestions.forEach(g => $('gaps').appendChild(el('li', '', esc(g))));
+D.claims.forEach((c, i) => {
+  const b = el('div', 'box');
+  b.innerHTML = '<b>' + esc(c.claim) + '</b>';
+  const t = el('textarea'); t.placeholder = 'Where does this break?'; t.value = S.crit['c' + i] || '';
+  t.oninput = () => { S.crit['c' + i] = t.value; save(); };
+  const r = el('div', 'box obs', esc(c.breaks)); r.hidden = true;
+  const bt = el('button', '', 'Reveal'); bt.onclick = () => { r.hidden = !r.hidden; };
+  b.appendChild(t); b.appendChild(bt); b.appendChild(r); $('claims').appendChild(b);
+});
+
+// ---------- timeline svg
+function timeline(events, tmax) {
+  const W = 840, H = 130, x0 = 20, x1 = W - 20, y = 62;
+  const X = (t) => x0 + (x1 - x0) * Math.min(t, tmax) / tmax;
+  let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img">';
+  s += '<line x1="' + x0 + '" y1="' + y + '" x2="' + x1 + '" y2="' + y + '" stroke="currentColor" opacity=".4"/>';
+  for (let t = 0; t <= tmax; t += (tmax > 20 ? 5 : 2)) s += '<text x="' + X(t) + '" y="' + (y + 14) + '" text-anchor="middle" opacity=".6">' + t + ' s</text>';
+  events.forEach((e, i) => {
+    const up = i % 2 === 0, ty = up ? y - 18 - (i % 4 === 2 ? 14 : 0) : y + 36 + (i % 4 === 3 ? 14 : 0);
+    s += '<circle cx="' + X(e[0]) + '" cy="' + y + '" r="5" fill="#1d4ed8"/>';
+    s += '<line x1="' + X(e[0]) + '" y1="' + y + '" x2="' + X(e[0]) + '" y2="' + (up ? ty + 4 : ty - 12) + '" stroke="#1d4ed8" opacity=".5"/>';
+    s += '<text x="' + X(e[0]) + '" y="' + ty + '" text-anchor="' + (e[0] > tmax * 0.85 ? 'end' : 'middle') + '">' + esc(e[0] + ' s: ' + e[1]) + '</text>';
+  });
+  return s + '</svg>';
+}
+
+// ---------- cards
+function drawCards() {
+  D.cards.forEach(c => {
+    const box = el('div', 'card');
+    box.innerHTML = '<h3>' + esc(c.title) + '</h3><p>' + esc(c.setup) + '</p><div class="box how"><span class="tag">Predict</span>' + esc(c.predict) + '</div>';
+    const t = el('textarea'); t.placeholder = 'Your prediction, with numbers'; t.value = S.notes[c.id] || '';
+    t.oninput = () => { S.notes[c.id] = t.value; save(); };
+    box.appendChild(t);
+    const rev = el('div'); rev.hidden = true;
+    let h = '';
+    if (c.events) h += timeline(c.events, c.tmax);
+    h += '<div class="box obs"><span class="tag">Measured</span><ul>' + c.observed.map(o => '<li>' + esc(o) + '</li>').join('') + '</ul></div>';
+    if (c.derived) h += '<div class="box derived"><span class="tag">Calculated, not measured</span>' + esc(c.derived) + '</div>';
+    if (c.figure) h += '<figure><img src="' + D.images[c.figure] + '" alt=""><figcaption>' + esc(c.caption) + '</figcaption></figure>';
+    if (c.notest) h += '<div class="box nots"><span class="tag">Not established</span>' + esc(c.notest) + '</div>';
+    rev.innerHTML = h;
+    const row = el('div', 'row');
+    const rb = el('button', '', 'Reveal'); rb.onclick = () => { rev.hidden = !rev.hidden; };
+    row.appendChild(rb);
+    [['good', 'I had it', 2], ['mid', 'Partly', 1], ['bad', 'Missed it', 0]].forEach(([cls, lab, v]) => {
+      const b = el('button', cls + (S.rate[c.id] === v ? ' on' : ''), lab);
+      b.onclick = () => { S.rate[c.id] = v; save(); row.querySelectorAll('button.good,button.mid,button.bad').forEach(x => x.classList.remove('on')); b.classList.add('on'); };
+      row.appendChild(b);
+    });
+    box.appendChild(row); box.appendChild(rev); $('cards').appendChild(box);
+  });
+}
+
+// ---------- calculators
+function c1() {
+  const n = +$('c1n').value, m = +$('c1m').value, L = 0.5, W = 0.2;
+  const r = Math.hypot(L / (2 * n), W / 2);
+  $('c1out').innerHTML = 'r = <b>' + r.toFixed(4) + ' m</b>. A gap needs 2r = ' + (2 * r).toFixed(3) + ' m without margin and <b>' + (2 * (r + m)).toFixed(4) + ' m</b> with the margin. Centres at ' +
+    Array.from({length: n}, (_, i) => (-L / 2 + (L / n) * (i + 0.5)).toFixed(3)).join(', ') + ' m.';
+}
+const OBS_SHORT = {0.50: 1.18, 0.40: 1.26, 0.34: 1.29, 0.30: 1.31, 0.28: 1.32};
+function stopx(g) {
+  const r1 = Math.hypot(0.25, 0.1), R = 0.1 + r1 + 0.02, d = g / 2 + 0.1;
+  return R > d ? 1.0 - Math.sqrt(R * R - d * d) : null;
+}
+function c2() {
+  const g = +$('c2g').value, x = stopx(g);
+  $('c2out').innerHTML = x === null ? 'The ring does not reach the centre line: the robot passes.' : 'Stops at x = <b>' + x.toFixed(3) + ' m</b>, which is ' + (2 - x).toFixed(3) + ' m short of the goal (2.0, 0.0).';
+  let t = '<tr><th>gap</th><th>calculated stop x</th><th>calculated short</th><th>observed short (report Table 1)</th><th>difference</th></tr>';
+  Object.keys(OBS_SHORT).sort((a, b) => b - a).forEach(k => {
+    const xs = stopx(+k), sh = 2 - xs, ob = OBS_SHORT[k];
+    t += '<tr><td>' + (+k).toFixed(2) + ' m</td><td>' + xs.toFixed(3) + ' m</td><td>' + sh.toFixed(3) + ' m</td><td>' + ob.toFixed(2) + ' m</td><td>' + ((ob - sh) * 100).toFixed(1) + ' cm</td></tr>';
+  });
+  $('c2tab').innerHTML = t + '<tr><td colspan="5">Calculated here from the constraint and compared with the runs. The rings predict every stopping distance to within about 1.5 cm.</td></tr>';
+}
+function c3() { $('c3out').innerHTML = 'Reach = N x t_step x v = <b>' + (+$('c3n').value * +$('c3t').value * +$('c3v').value).toFixed(3) + ' m</b>.'; }
+['c1n', 'c1m'].forEach(i => $(i).oninput = c1); $('c2g').oninput = c2; ['c3n', 'c3t', 'c3v'].forEach(i => $(i).oninput = c3);
+
+// ---------- questions
+let qfilter = {mode: 'all'};
+const areas = ['all areas'].concat([...new Set(D.questions.map(q => q.area))]);
+areas.forEach(a => { const o = el('option', '', esc(a)); o.value = a === 'all areas' ? '' : a; $('qarea').appendChild(o); });
+function qrender(list) {
+  const box = $('qlist'); box.innerHTML = '';
+  list.forEach(q => {
+    const c = el('div', 'card');
+    c.innerHTML = '<b>' + esc(q.q) + '</b><span class="who">' + esc(q.area) + ', ' + esc(q.who) + '</span>';
+    const a = el('div', 'box obs', esc(q.a) + (q.dont ? '<div class="dont">' + esc(q.dont) + '</div>' : '')); a.hidden = true;
+    const row = el('div', 'row');
+    const rb = el('button', '', 'Reveal answer'); rb.onclick = () => { a.hidden = !a.hidden; };
+    row.appendChild(rb);
+    [['good', 'Green', 2], ['mid', 'Amber', 1], ['bad', 'Red', 0]].forEach(([cls, lab, v]) => {
+      const b = el('button', cls + (S.qrate[q.id] === v ? ' on' : ''), lab);
+      b.onclick = () => { S.qrate[q.id] = v; save(); row.querySelectorAll('button.good,button.mid,button.bad').forEach(x => x.classList.remove('on')); b.classList.add('on'); };
+      row.appendChild(b);
+    });
+    c.appendChild(row); c.appendChild(a); box.appendChild(c);
+  });
+  if (!list.length) box.innerHTML = '<p class="lead">Nothing here yet.</p>';
+}
+function qpool() { return D.questions.filter(q => (!$('qarea').value || q.area === $('qarea').value) && (!$('qwho').value || q.who === $('qwho').value || q.who === 'both')); }
+$('qask').onclick = () => { const p = qpool(); qrender(p.length ? [p[Math.floor(Math.random() * p.length)]] : []); };
+$('qred').onclick = () => qrender(qpool().filter(q => S.qrate[q.id] === 0 || S.qrate[q.id] === undefined));
+$('qall').onclick = () => qrender(qpool());
+$('qarea').onchange = $('qwho').onchange = () => qrender(qpool());
+
+// ---------- numbers
+D.numbers.forEach(g => {
+  const d = el('details'); d.open = false;
+  d.appendChild(el('summary', '', esc(g.group)));
+  const t = el('table');
+  g.rows.forEach(r => {
+    const tr = el('tr'); tr.appendChild(el('td', '', esc(r[0])));
+    const v = el('td', 'hide', esc(r[1])); v.onclick = () => v.classList.toggle('hide');
+    tr.appendChild(v); t.appendChild(tr);
+  });
+  d.appendChild(t); $('numbers').appendChild(d);
+});
+
+drawChips(); drawLinks(); drawCards(); c1(); c2(); c3(); qrender(D.questions.slice(0, 6)); progress();
+</script>
+</body>
+</html>

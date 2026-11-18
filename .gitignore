@@ -1,0 +1,39 @@
+# colcon build output
+build/
+install/
+log/
+
+# python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# recordings and media are large; keep the folder, not the contents
+bags/*
+!bags/.gitkeep
+*.mcap
+*.webm
+
+# local Lab 3 demo bags and rendered videos
+/lab3/bags/*
+/project/bags/*
+
+# editor tool worktrees - these hold stale copies of the notes below
+.kilo/
+
+# internal working notes, kept local and out of the repo
+/CLAUDE.md
+/PROPOSAL.md
+/lab2/PLAN.md
+/lab3/Lab_Instructions_Exploration.pdf
+# hall and sim bags stay on this laptop
+lab3/ros2_ws/bags/
+
+lab4/ros2_ws/src/r7021e_fast_slam/runs
+
+# saved Canvas pages hold session keys; keep them local
+project/*.html
+
+# zip files are large and not needed in the repo
+*.zip

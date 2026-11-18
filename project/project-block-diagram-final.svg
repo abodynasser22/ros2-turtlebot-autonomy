@@ -1,0 +1,146 @@
+<svg width="960" height="518.4" viewBox="0 0 720 388.8" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      *{stroke-linejoin:round;stroke-linecap:butt}
+    </style>
+  </defs>
+  <g id="figure_1">
+    <path d="M0 388.8h720V0H0z" style="fill:#fff" id="patch_1"/>
+    <g id="axes_1">
+      <path d="M0 0h720v388.8H0z" clip-path="url(#p9fcad58d5d)" style="fill:#fff" id="patch_2"/>
+      <path d="M216 4.32h288V21.6H216z" clip-path="url(#p9fcad58d5d)" style="fill:#fff;stroke:#1a1a1a;stroke-width:.864;stroke-linejoin:miter" id="patch_3"/>
+      <path d="M14.4 57.6h122.4v237.6H14.4z" clip-path="url(#p9fcad58d5d)" style="fill:#fff;stroke:#1a1a1a;stroke-width:.864;stroke-linejoin:miter" id="patch_4"/>
+      <path d="M223.2 57.6h86.4v259.2h-86.4z" clip-path="url(#p9fcad58d5d)" style="fill:#fff;stroke:#1a1a1a;stroke-width:.864;stroke-linejoin:miter" id="patch_5"/>
+      <g id="patch_6">
+        <path d="M136.8 136.8h85.354" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+        <path d="m219.354 135.4 2.8 1.4-2.8 1.4z" clip-path="url(#p9fcad58d5d)" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+      </g>
+      <g id="patch_7">
+        <path d="M223.2 237.6h-85.354" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+        <path d="m140.646 239-2.8-1.4 2.8-1.4z" clip-path="url(#p9fcad58d5d)" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+      </g>
+      <path d="M345.6 44.64h216v288h-216z" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke-dasharray:4.32,2.88;stroke-dashoffset:0;stroke:#1a1a1a;stroke-width:.72;stroke-linejoin:miter" id="patch_8"/>
+      <path d="M360 69.12h187.2v44.64H360z" clip-path="url(#p9fcad58d5d)" style="fill:#e6d98f;stroke:#b89b2e;stroke-width:.936;stroke-linejoin:miter" id="patch_9"/>
+      <path d="M360 126.72h187.2v44.64H360z" clip-path="url(#p9fcad58d5d)" style="fill:#dae8fc;stroke:#6c8ebf;stroke-width:.936;stroke-linejoin:miter" id="patch_10"/>
+      <path d="M360 184.32h187.2v44.64H360z" clip-path="url(#p9fcad58d5d)" style="fill:#f8cecc;stroke:#b85450;stroke-width:.936;stroke-linejoin:miter" id="patch_11"/>
+      <path d="M360 252h187.2v64.8H360z" clip-path="url(#p9fcad58d5d)" style="fill:#fff;stroke:#1a1a1a;stroke-width:.864;stroke-linejoin:miter" id="patch_12"/>
+      <g id="patch_13">
+        <path d="M555.84 284.4h-7.594" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+        <path d="m551.046 285.8-2.8-1.4 2.8-1.4z" clip-path="url(#p9fcad58d5d)" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+      </g>
+      <g id="patch_14">
+        <path d="M309.6 284.4h49.354" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+        <path d="m356.154 283 2.8 1.4-2.8 1.4z" clip-path="url(#p9fcad58d5d)" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+      </g>
+      <g id="patch_15">
+        <path d="M309.6 149.04h49.354" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+        <path d="m356.154 147.64 2.8 1.4-2.8 1.4z" clip-path="url(#p9fcad58d5d)" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+      </g>
+      <g id="patch_16">
+        <path d="M309.6 206.64h49.354" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+        <path d="m356.154 205.24 2.8 1.4-2.8 1.4z" clip-path="url(#p9fcad58d5d)" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+      </g>
+      <g id="patch_17">
+        <path d="M360 306h-49.354" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+        <path d="m313.446 307.4-2.8-1.4 2.8-1.4z" clip-path="url(#p9fcad58d5d)" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+      </g>
+      <path d="M597.6 72h108v43.2h-108z" clip-path="url(#p9fcad58d5d)" style="fill:#fff;stroke:#1a1a1a;stroke-width:.864;stroke-linejoin:miter" id="patch_18"/>
+      <path d="M597.6 208.8h108V288h-108z" clip-path="url(#p9fcad58d5d)" style="fill:#e1d5e7;stroke:#9673a6;stroke-width:.936;stroke-linejoin:miter" id="patch_19"/>
+      <g id="patch_20">
+        <path d="M561.6 97.2h29.194" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+        <path d="m587.994 95.8 2.8 1.4-2.8 1.4z" clip-path="url(#p9fcad58d5d)" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+      </g>
+      <g id="patch_21">
+        <path d="M651.6 37.44v27.754" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+        <path d="m653 62.394-1.4 2.8-1.4-2.8z" clip-path="url(#p9fcad58d5d)" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+      </g>
+      <g id="patch_22">
+        <path d="M651.6 115.2v86.794" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+        <path d="m653 199.194-1.4 2.8-1.4-2.8z" clip-path="url(#p9fcad58d5d)" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:round"/>
+      </g>
+      <path d="M14.4 352.8h15.84v11.52H14.4z" clip-path="url(#p9fcad58d5d)" style="fill:#fff;stroke:#1a1a1a;stroke-width:.864;stroke-linejoin:miter" id="patch_23"/>
+      <path d="M237.6 352.8h15.84v11.52H237.6z" clip-path="url(#p9fcad58d5d)" style="fill:#e6d98f;stroke:#b89b2e;stroke-width:.936;stroke-linejoin:miter" id="patch_24"/>
+      <path d="M316.8 352.8h15.84v11.52H316.8z" clip-path="url(#p9fcad58d5d)" style="fill:#dae8fc;stroke:#6c8ebf;stroke-width:.936;stroke-linejoin:miter" id="patch_25"/>
+      <path d="M432 352.8h15.84v11.52H432z" clip-path="url(#p9fcad58d5d)" style="fill:#f8cecc;stroke:#b85450;stroke-width:.936;stroke-linejoin:miter" id="patch_26"/>
+      <path d="M547.2 352.8h15.84v11.52H547.2z" clip-path="url(#p9fcad58d5d)" style="fill:#e1d5e7;stroke:#9673a6;stroke-width:.936;stroke-linejoin:miter" id="patch_27"/>
+      <path d="M547.2 91.44h8.64" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:square" id="line2d_1"/>
+      <path d="M547.2 149.04h8.64" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:square" id="line2d_2"/>
+      <path d="M547.2 206.64h8.64" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:square" id="line2d_3"/>
+      <path d="M555.84 91.44V284.4" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936;stroke-linecap:square" id="line2d_4"/>
+      <path d="M266.4 57.6V37.44" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936" id="line2d_5"/>
+      <path d="M266.4 37.44h385.2" clip-path="url(#p9fcad58d5d)" style="fill:none;stroke:#1a1a1a;stroke-width:.936" id="line2d_6"/>
+      <text style="fill:#1a1a1a;font:9.36px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="360" y="15.543" id="text_1">Control stack of the project</text>
+      <text style="fill:#1a1a1a;font:9px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="75.6" y="172.403" id="text_2">Gazebo</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="75.6" y="185.686" id="text_3">Burger with the plank</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="75.6" y="196.486" id="text_4">obstacle: a cylinder</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="75.6" y="207.286" id="text_5">goal: a green ball</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="75.6" y="218.086" id="text_6">exact poses of all three</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="75.6" y="228.886" id="text_7">(ground truth)</text>
+      <text style="fill:#1a1a1a;font:9px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="266.4" y="172.278" id="text_8">ros_gz_bridge</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="266.4" y="185.686" id="text_9">(provided)</text>
+      <g id="text_10">
+        <path d="M163.59 131.08h32.82v-10.16h-32.82z" style="fill:#fff" id="patch_28"/>
+        <text style="fill:#1a1a1a;font:6.48px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="180" y="127.788">gz topics</text>
+      </g>
+      <g id="text_11">
+        <path d="M162.729 231.88h34.542v-10.16H162.73z" style="fill:#fff" id="patch_29"/>
+        <text style="fill:#1a1a1a;font:6.48px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="180" y="228.588">velocities</text>
+      </g>
+      <text style="fill:#1a1a1a;font:7.92px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="453.6" y="56.795" id="text_12">mpc_node</text>
+      <text style="fill:#1a1a1a;font:9px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="453.6" y="87.443" id="text_13">Body footprint</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="453.6" y="100.726" id="text_14">three discs along the plank</text>
+      <text style="fill:#1a1a1a;font:9px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="453.6" y="145.043" id="text_15">Obstacle prediction</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="453.6" y="158.326" id="text_16">its future, or where it is now</text>
+      <text style="fill:#1a1a1a;font:9px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="453.6" y="202.643" id="text_17">Goal estimator</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="453.6" y="215.926" id="text_18">constant velocity fit, or hold</text>
+      <text style="fill:#1a1a1a;font:9px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="453.6" y="280.403" id="text_19">MPC solve (do-mpc, Lab 2)</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="453.6" y="293.686" id="text_20">keep-out per disc, soft box</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="453.6" y="304.486" id="text_21">IPOPT, one solve per 0.1 s</text>
+      <g id="text_22">
+        <path d="M322.587 278.68h24.426v-10.16h-24.426z" style="fill:#fff" id="patch_30"/>
+        <text style="fill:#1a1a1a;font:6.48px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="334.8" y="275.388">/odom</text>
+      </g>
+      <g id="text_23">
+        <path d="M308.89 143.32h51.82v-10.16h-51.82z" style="fill:#fff" id="patch_31"/>
+        <text style="fill:#1a1a1a;font:6.48px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="334.8" y="139.848">/mover_1/pose</text>
+      </g>
+      <g id="text_24">
+        <path d="M313.1 200.92h43.4v-10.16h-43.4z" style="fill:#fff" id="patch_32"/>
+        <text style="fill:#1a1a1a;font:6.48px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="334.8" y="197.628">/target/pose</text>
+      </g>
+      <text style="fill:#1a1a1a;font:6.48px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="334.8" y="222.108" id="text_25">+ 2 cm noise</text>
+      <g id="text_26">
+        <path d="M313.19 321.97h43.22v-10.34h-43.22z" style="fill:#fff" id="patch_33"/>
+        <text style="fill:#1a1a1a;font:6.48px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="334.8" y="318.498">/cmd_vel, ...</text>
+      </g>
+      <text style="fill:#1a1a1a;font:9px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="651.6" y="89.603" id="text_27">rosbag</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="651.6" y="102.886" id="text_28">every run, saved</text>
+      <text style="fill:#1a1a1a;font:9px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="651.6" y="244.403" id="text_29">Evaluation</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="651.6" y="257.581" id="text_30">plot_run.py</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="651.6" y="268.486" id="text_31">clearance, distance</text>
+      <text style="fill:#1a1a1a;font:7.56px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="651.6" y="279.286" id="text_32">solve time</text>
+      <g id="text_33">
+        <path d="M546.426 90.915h60.588v-9.03h-60.588z" style="fill:#fff" id="patch_34"/>
+        <text style="fill:#1a1a1a;font:5.76px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="576.72" y="87.989">markers, solve time</text>
+      </g>
+      <g id="text_34">
+        <path d="M409.167 42.52h103.266V32.36H409.167z" style="fill:#fff" id="patch_35"/>
+        <text style="fill:#1a1a1a;font:6.48px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="460.8" y="39.228">poses, odometry, ground truth</text>
+      </g>
+      <g id="text_35">
+        <path d="M624.548 164.2h54.104v-10.16h-54.104z" style="fill:#fff" id="patch_36"/>
+        <text style="fill:#1a1a1a;font:6.48px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:middle" x="651.6" y="160.908">recorded topics</text>
+      </g>
+      <text style="fill:#1a1a1a;font:7.2px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:start" x="36" y="360.547" id="text_36">provided or from Lab 2</text>
+      <text style="fill:#1a1a1a;font:7.2px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:start" x="259.2" y="360.547" id="text_37">new: body</text>
+      <text style="fill:#1a1a1a;font:7.2px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:start" x="338.4" y="360.547" id="text_38">new: moving obstacle</text>
+      <text style="fill:#1a1a1a;font:7.2px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:start" x="453.6" y="360.547" id="text_39">new: moving goal</text>
+      <text style="fill:#1a1a1a;font:7.2px&quot;DejaVu Sans&quot;,&quot;Bitstream Vera Sans&quot;,&quot;Computer Modern Sans Serif&quot;,&quot;Lucida Grande&quot;,&quot;Verdana&quot;,&quot;Geneva&quot;,&quot;Lucid&quot;,&quot;Arial&quot;,&quot;Helvetica&quot;,&quot;Avant Garde&quot;,sans-serif;text-anchor:start" x="568.8" y="360.547" id="text_40">new: evaluation</text>
+    </g>
+  </g>
+  <defs>
+    <clipPath id="p9fcad58d5d">
+      <path d="M0 0h720v388.8H0z"/>
+    </clipPath>
+  </defs>
+</svg>

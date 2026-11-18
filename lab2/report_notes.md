@@ -1,0 +1,215 @@
+# Lab 2: what is wrong, and what we fixed
+
+Written 2026-10-06 from the six bags recorded on 2026-10-05 and from offline simulation runs.
+Figures are in `plots/`.
+
+## Task 4 never ran on the robot
+
+Both task 4 bags show the robot stationary. 0.019 m and 0.023 m of travel over 98 s and 94 s.
+
+It was parked at (1.819, 0.504), which is exactly where `task3-final` ended. Task 4's boundary
+box is +/-1.5 m, so x = 1.819 was already outside it before the first solve. The state bounds
+are hard and they are enforced at every horizon step including step zero, and step zero is the
+measurement, not something the optimiser can change. So the problem was infeasible from the
+first tick and stayed that way.
+
+We forgot to reset the robot between tasks. But a forgotten reset should cost a bad run, not a
+controller that cannot recover. The real flaw is ours: hard bounds on a measured state.
+
+## The same mechanism broke task 2
+
+`task2-big-real-obstacle`: the robot drove to 0.904 m from the obstacle centre against a
+1.105 m keep-out radius, so 0.2 m inside the zone, then stopped at x = 1.292 and never moved
+again. Hard obstacle constraint, measurement inside it, infeasible forever.
+
+The obstacle was a second, physically large robot that the instructor parked in our path, so a
+1.0 m radius may well have been honest. Either way the geometry was unworkable: inflated for
+our own footprint it becomes a 1.105 m keep-out, 2.21 m across, and detouring around that needs
+roughly 2.2 m of lateral swing. Our horizon reaches 20 x 0.1 x 0.22 = 0.44 m. The solver could
+not see far enough around it to commit to a detour, so it drove to the edge and stopped.
+
+Worth stating plainly, because it is a design limit and not a tuning slip: an obstacle is only
+avoidable if the detour it forces is smaller than the distance the horizon covers. At 0.22 m/s
+that is 0.44 m. Nothing about the cost function changes it.
+
+## Task 1 overshot its own boundary
+
+Final position x = 1.061 with the box at +/-1.0. We had added a 0.05 m margin between the
+commanded box and the solver's box, and 61 mm of overshoot ate straight through it. Same class
+of problem again.
+
+## Task 3 worked, but not the way the task intended
+
+`task3-final` on the robot: 2.229 m of path, both constraints respected, first obstacle cleared
+by 7.9 mm. Technically a pass.
+
+But we published the goal as roughly (1.8, 0.5) instead of (1.8, 0.0), so the robot went up and
+over the first obstacle and never entered the gap between the two. The second obstacle was
+cleared by 545 mm, which is another way of saying it was never relevant. Only one of the two
+constraints did any work.
+
+Simulated with the goal the task actually calls for, same bounds and same obstacles:
+
+| | real robot, goal (1.8, 0.5) | simulation, goal (1.8, 0.0) |
+|---|---|---|
+| path length | 2.229 m | 1.848 m |
+| time | 41.1 s | 8.3 s |
+| y extent | 0.000 to 0.763 m | -0.117 to 0.124 m |
+| obstacle 1 closest | 0.2629 m, clear by 7.9 mm | 0.2541 m, 0.9 mm of soft slack |
+| obstacle 2 closest | 0.8005 m, clear by 545 mm | 0.2549 m, 0.1 mm of soft slack |
+
+In simulation it weaves between them, stays within 0.124 m of the axis, and both constraints
+ride their boundary to within a millimetre. That is what task 3 is meant to look like. Compare
+`plots/task3_simulation.png` against `plots/task3-final_task3.png`.
+
+The sub-millimetre figures are the soft constraint doing its job, not a near miss. The slack is
+spent against the 105 mm inflation we added for the robot's own footprint, so 0.9 mm of slack
+still leaves about 104 mm between the robot and the physical object. Both scripts now report it
+that way rather than printing a violation warning.
+
+## What the instructor saw, and was right about
+
+He suggested the problem was in the publishing, and mentioned t_step. Both land.
+
+The publishing half is the stop-go above: gaps in `/cmd_vel` whenever a solve failed.
+
+The t_step half is actuation delay. The command we compute at tick k does not take effect until
+tick k+1 or later, but we were solving from the pose measured at tick k. The optimiser plans
+from a position the robot has already left. Measured offline on the task 4 circle:
+
+| case | mean error | jerk | omega flips | closest approach |
+|---|---|---|---|---|
+| no delay | 0.0023 m | 0.0044 | 4 | 0.2251 m |
+| 1 step delay, uncompensated | 0.0024 m | 0.0062 | 5 | 0.2254 m |
+| 1 step delay, compensated | 0.0023 m | 0.0045 | 5 | 0.2251 m |
+| 2 step delay, uncompensated | 0.0033 m | **0.0192** | 11 | **0.2217 m** |
+| 2 step delay, compensated | 0.0024 m | 0.0067 | 5 | 0.2254 m |
+
+Keep-out radius is 0.225 m. At two steps of delay the uncompensated run breaks the constraint
+by 3.3 mm and its jerk is 4.4 times the clean case. Compensating cuts jerk by 2.9 times and
+puts the robot back outside the keep-out.
+
+The fix is three lines: propagate the measured pose forward by `delay_steps * t_step` using the
+last command before handing it to the solver. It is a `delay_steps` parameter, default 1.
+
+## The jagged circle was not a tuning problem
+
+We assumed the jerky motion in task 4 meant badly chosen weights. It did not. We swept
+`r_input`, `lap_period`, `min_v` and `max_angular_velocity` in closed loop offline, and the
+original parameters were already the best of the eight combinations tested:
+
+| config | mean radius error | omega sign flips | stalls |
+|---|---|---|---|
+| lap 60 s, r_input 0.01 | 0.0023 m | 4 per lap | 0 |
+| lap 35 s, r_input 0.1, min_v 0.05 | 0.0043 m | 4 per lap | 0 |
+
+The cause was in the node, not the cost function. On any solver failure we published zero
+velocity. Near a constraint the solver fails intermittently, so the robot got stop, go, stop,
+go. That is the jerkiness.
+
+Fixed by holding the last command for up to three ticks before falling back to zero. A
+transient failure now coasts instead of braking, and a real failure still stops the robot
+within 0.3 s.
+
+## The lidar display was accumulating
+
+The laser looked like it was mapping everywhere the robot had been, updating slowly. That was
+not the lidar. The RViz LaserScan display had `Decay Time` set to 30, so it held 30 seconds of
+scans on screen at once. Set to 0, with point size raised from 0.01 to 0.03 so a single scan is
+still readable. We only ever needed the current scan.
+
+## The obstacles were invisible in RViz
+
+Nothing published them. One of us tried to write the marker publisher during the session and
+could not finish it, because it was not clear what a `Marker` actually needs to be filled in
+with, so it was left commented out.
+
+Four fields decide whether a marker appears at all, and three of them fail silently:
+
+- `id` must be unique within the namespace, or later markers overwrite earlier ones and you
+  see one obstacle instead of two.
+- `pose.orientation.w = 1.0`. Left at zero the quaternion is invalid and RViz drops the marker
+  with no error.
+- `scale.x` and `scale.y` are the **diameter**, not the radius. Half-size circles look like a
+  tolerance problem rather than a units problem.
+- `color.a` above zero. Default alpha is 0, which is a fully transparent marker. The display existed in an earlier config and the topic never had a
+publisher, so we were flying blind on exactly the thing that was breaking the runs. The node
+now publishes a `MarkerArray` on `/mpc_obstacles` with each obstacle and its inflated keep-out
+ring, and the RViz config carries the display.
+
+If this had been there on Monday we would have seen the 1.105 m keep-out swallowing half the
+room in about two seconds.
+
+## A bug in our own analysis tool
+
+`plot_rosbag.py` had its own copy of the task table. We ran task 2 with command-line overrides,
+so the plot compared the recorded path against obstacles that were never in play, and reported
+a violation against the wrong circle. It now reads the table out of the node, and takes
+`--obstacle x,y,r` and `--bound` for runs that used overrides.
+
+Two copies of the same constants is the bug. We have made that mistake before, in Lab 1, with
+five YAML files.
+
+## Task 4, simulated against the recorded run
+
+| | recorded on the robot | simulation, two laps |
+|---|---|---|
+| path length | 0.019 m | 10.901 m |
+| duration | 98.4 s | 128.1 s |
+| extent | a single point at (1.819, 0.504) | x +/-0.80, y -0.80 to 0.85 |
+| solver failures | every tick | 0 |
+| obstacle closest | 1.822 m, never relevant | 0.2249 m, 0.1 mm of soft slack |
+| tracking error | 1.0872 m, the distance to a circle it never reached | 0.0025 m mean, 0.0463 m max after the 8 s drive-on |
+
+`plots/task4_simulation.png` for the path, `plots/task4_simulation_twolaps.png` for the
+commanded v and omega and the error against time.
+
+The simulated run drives on from the origin during the 8 s delay, then holds the circle to
+2.5 mm on average for two full laps with no solver failure.
+
+That 0.1 mm of slack is worth reading twice. The soft constraint is not buying clearance
+cheaply, because the penalty is 1e4 against a tracking weight of 1.0: it behaves identically to
+a hard constraint whenever a hard one is satisfiable. On hardware, with actuation delay, it
+will spend more, and that is the point of making it soft. A hard constraint in the same place
+deadlocks, which is what task 2 did.
+
+## What we would do differently in tasks 1 to 3
+
+**Task 1.** The boundary bounds are hard, so when the robot overshot x = 1.0 to 1.061 the
+measured state itself became illegal and nothing could recover it. We would make the box four
+soft constraints instead of `mpc.bounds`, and clip the commanded goal into the box from the
+start rather than discovering the problem on the floor. We also had no record of the solver
+status during the run, so we could not tell a correct stop at the boundary from a deadlock
+until we read the bag afterwards.
+
+**Task 2.** We placed the obstacle before checking whether it could be avoided. The test is one
+line of arithmetic: the detour an obstacle forces has to be smaller than `n_horizon * t_step *
+v_max`, which is 0.44 m for us. A 1.105 m keep-out needs about 2.2 m. We would compute that
+before putting anything on the floor, and we would have published the obstacle markers so the
+keep-out circle was visible in RViz instead of invisible and twice the size we pictured.
+
+**Task 3.** We published the goal as roughly (1.8, 0.5) instead of (1.8, 0.0), so the robot
+went over the first obstacle and the second one never constrained anything. The task wants both
+constraints active. We would run the task in simulation first and compare the shape, which is
+exactly what showed the mistake once we did it. Getting the goal on the axis between the two
+obstacles is the whole point of the task.
+
+The common thread across all three: every one of them was a geometry or a feasibility question
+we could have answered at a desk in a minute, and we answered all three on the floor with the
+robot running and the clock going.
+
+## Still wrong, and we know it
+
+- State bounds are still hard. A pose outside the box is still unrecoverable, which is exactly
+  what killed task 4. The fix is four soft `set_nl_cons` instead of `mpc.bounds`, and we have
+  not done it yet.
+- There is no heading term in the cost, only position. On a circle the robot is free to cut the
+  chord, and some of the 45 mm peak error is that rather than lag.
+- The horizon is 0.44 m of travel. Any obstacle needing a bigger detour than that will be
+  pushed through rather than avoided. This is a hard limit of the horizon, not a tuning choice,
+  and it needs stating whenever we pick obstacle sizes.
+- Task 4 has only ever completed in simulation. We have no hardware bag of it.
+- `delay_steps` defaults to 1 and we have not measured the robot's actual command latency. Over
+  Wi-Fi with a 5 Hz lidar it is plausibly closer to 2, which is where the uncompensated numbers
+  above get bad. Measuring it is a stopwatch job: timestamp a command, timestamp the odometry
+  response.

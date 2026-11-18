@@ -1,0 +1,5 @@
+# offline desk simulations stay local, like lab4/desk
+desk/
+
+# working notes for the resubmission, kept local
+resubmission/internal/
